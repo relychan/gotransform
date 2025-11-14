@@ -26,15 +26,15 @@ type FieldMappingInterface interface {
 }
 
 type FieldMapping struct {
-	inner FieldMappingInterface
+	FieldMappingInterface
 }
 
 func NewFieldMapping(inner FieldMappingInterface) FieldMapping {
-	return FieldMapping{inner: inner}
+	return FieldMapping{FieldMappingInterface: inner}
 }
 
 func (fm FieldMapping) Interface() FieldMappingInterface { //nolint:ireturn
-	return fm.inner
+	return fm.FieldMappingInterface
 }
 
 // FieldMappingEntry is the entry to lookup field values with the specified JMES path.
@@ -83,11 +83,11 @@ func (fm FieldMappingObject) Evaluate(data any) (any, error) {
 	result := make(map[string]any)
 
 	for key, field := range fm.Properties {
-		if field.inner == nil {
+		if field.FieldMappingInterface == nil {
 			return nil, nil
 		}
 
-		value, err := field.inner.Evaluate(data)
+		value, err := field.Evaluate(data)
 		if err != nil {
 			return nil, fmt.Errorf("%s: %w", key, err)
 		}

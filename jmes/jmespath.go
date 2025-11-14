@@ -1,7 +1,9 @@
 // Package jmes implements the transform template using JMESPath templates.
 package jmes
 
-import "github.com/jmespath-community/go-jmespath"
+import (
+	"fmt"
+)
 
 // JMESTemplateTransformer implements the transform template using JMESPath templates.
 type JMESTemplateTransformer struct {
@@ -20,42 +22,24 @@ func (gtt JMESTemplateTransformer) Transform(data any) (any, error) {
 	return transform(gtt.template, data)
 }
 
-func transform(template any, data any) (any, error) {
-	if template == nil {
-		return nil, nil
-	}
+func transform(template FieldMapping, data any) (any, error) {
+	switch expr := template.Interface().(type) {
+	case *FieldMappingEntry:
+		return expr.Evaluate(data)
+	case *FieldMappingObject:
+		result := map[string]any{}
 
-	switch expr := template.(type) {
-	case string:
-		if expr == "" {
-			return "", nil
-		}
+		for key, field := range expr.Properties {
+			fieldValue, err := field.Evaluate(data)
+			if err != nil {
+				return nil, fmt.Errorf("%s: %w", key, err)
+			}
 
-		value, err := jmespath.Search(expr, data)
-		if err != nil {
-			return expr, err
-		}
-
-		return value, nil
-	case map[string]any:
-		result := make(map[string]any)
-
-		for key, value := range expr {
-			elemValue, _ := transform(value, data)
-			result[key] = elemValue
-		}
-
-		return result, nil
-	case []any:
-		result := make([]any, len(expr))
-
-		for i, value := range expr {
-			elemValue, _ := transform(value, data)
-			result[i] = elemValue
+			result[key] = fieldValue
 		}
 
 		return result, nil
 	default:
-		return template, nil
+		return nil, fmt.Errorf("%w: %v", ErrUnsupportedFieldMappingType, expr)
 	}
 }

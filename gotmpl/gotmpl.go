@@ -3,6 +3,7 @@ package gotmpl
 
 import (
 	"bytes"
+	"encoding/json"
 	htmltemplate "html/template"
 	"io"
 	"strings"
@@ -55,5 +56,14 @@ func (gtt GoTemplateTransformer) Transform(data any) (any, error) {
 		return nil, err
 	}
 
-	return buffer.Bytes(), nil
+	switch gtt.contentType {
+	case "application/json":
+		var result any
+
+		err := json.Unmarshal(buffer.Bytes(), &result)
+
+		return result, err
+	default:
+		return buffer.String(), nil
+	}
 }
