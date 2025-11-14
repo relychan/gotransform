@@ -91,7 +91,7 @@ func (fm *FieldMappingConfig) UnmarshalYAML(value *yaml.Node) error {
 
 // FieldMappingEntryConfig is the entry config to lookup field values with the specified JMES path.
 type FieldMappingEntryConfig struct {
-	// JSON pointer to find the particular claim in the decoded JWT token.
+	// Path is a JMESPath expression to find a value in the input data.
 	Path *string `json:"path,omitempty" yaml:"path,omitempty"`
 	// Default value to be used when no value is found when looking up the value using the path.
 	Default *goenvconf.EnvAny `json:"default,omitempty" yaml:"default,omitempty"`

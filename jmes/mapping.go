@@ -39,7 +39,7 @@ func (fm FieldMapping) Interface() FieldMappingInterface { //nolint:ireturn
 
 // FieldMappingEntry is the entry to lookup field values with the specified JMES path.
 type FieldMappingEntry struct {
-	// JSON pointer to find the particular claim in the decoded JWT token.
+	// Path is a JMESPath expression to find a value in the input data.
 	Path *string
 	// Default value to be used when no value is found when looking up the value using the path.
 	Default any
