@@ -8,11 +8,13 @@ import (
 	"go.yaml.in/yaml/v4"
 )
 
+// FieldMappingConfigInterface abstracts the interface of a field mapping config.
 type FieldMappingConfigInterface interface {
 	Type() FieldMappingType
 	Evaluate() (FieldMapping, error)
 }
 
+// FieldMappingConfig represents a generic field mapping config.
 type FieldMappingConfig struct {
 	FieldMappingConfigInterface `yaml:",inline"`
 }
@@ -21,10 +23,12 @@ type rawFieldMappingConfig struct {
 	Type FieldMappingType `json:"type" yaml:"type"`
 }
 
+// NewFieldMappingConfig creates a new FieldMappingConfig instance.
 func NewFieldMappingConfig(inner FieldMappingConfigInterface) FieldMappingConfig {
 	return FieldMappingConfig{FieldMappingConfigInterface: inner}
 }
 
+// Interface returns the underlying config interface.
 func (fm FieldMappingConfig) Interface() FieldMappingConfigInterface {
 	return fm.FieldMappingConfigInterface
 }
@@ -99,14 +103,17 @@ type FieldMappingEntryConfig struct {
 
 var _ FieldMappingConfigInterface = (*FieldMappingEntryConfig)(nil)
 
+// Type returns the type of field mapping config.
 func (FieldMappingEntryConfig) Type() FieldMappingType {
 	return FieldMappingTypeField
 }
 
+// IsZero checks if the config is empty.
 func (fm FieldMappingEntryConfig) IsZero() bool {
 	return fm.Path == nil && fm.Default == nil
 }
 
+// Evaluate converts the config to the field mapping instance.
 func (fm FieldMappingEntryConfig) Evaluate() (FieldMapping, error) {
 	if fm.IsZero() {
 		return FieldMapping{}, ErrFieldMappingEntryRequired
@@ -133,14 +140,17 @@ type FieldMappingObjectConfig struct {
 	Properties map[string]FieldMappingConfig `json:"properties" yaml:"properties"`
 }
 
+// Type returns the type of field mapping config.
 func (FieldMappingObjectConfig) Type() FieldMappingType {
 	return FieldMappingTypeObject
 }
 
+// IsZero checks if the config is empty.
 func (fm FieldMappingObjectConfig) IsZero() bool {
 	return fm.Properties == nil
 }
 
+// Evaluate converts the config to the field mapping instance.
 func (fm FieldMappingObjectConfig) Evaluate() (FieldMapping, error) {
 	if fm.IsZero() {
 		return FieldMapping{}, ErrFieldMappingObjectRequired

@@ -4,6 +4,7 @@ package gotmpl
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	htmltemplate "html/template"
 	"io"
 	"strings"
@@ -41,7 +42,7 @@ func NewGoTemplateTransformer(
 	}
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to parse template %q: %w", name, err)
 	}
 
 	return result, nil
@@ -53,7 +54,7 @@ func (gtt GoTemplateTransformer) Transform(data any) (any, error) {
 
 	err := gtt.template.Execute(&buffer, data)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute template: %w", err)
 	}
 
 	switch gtt.contentType {
@@ -62,7 +63,7 @@ func (gtt GoTemplateTransformer) Transform(data any) (any, error) {
 
 		err := json.Unmarshal(buffer.Bytes(), &result)
 
-		return result, err
+		return result, fmt.Errorf("failed to unmarshal JSON result. %w", err)
 	default:
 		return buffer.String(), nil
 	}
