@@ -115,8 +115,18 @@ func (fm FieldMappingEntryConfig) IsZero() bool {
 
 // Evaluate converts the config to the field mapping instance.
 func (fm FieldMappingEntryConfig) Evaluate() (FieldMapping, error) {
+	entry, err := fm.EvaluateEntry()
+	if err != nil {
+		return FieldMapping{}, err
+	}
+
+	return NewFieldMapping(entry), nil
+}
+
+// EvaluateEntry converts the config to the field mapping entry instance.
+func (fm FieldMappingEntryConfig) EvaluateEntry() (FieldMappingEntry, error) {
 	if fm.IsZero() {
-		return FieldMapping{}, ErrFieldMappingEntryRequired
+		return FieldMappingEntry{}, ErrFieldMappingEntryRequired
 	}
 
 	result := FieldMappingEntry{
@@ -126,13 +136,13 @@ func (fm FieldMappingEntryConfig) Evaluate() (FieldMapping, error) {
 	if fm.Default != nil {
 		value, err := fm.Default.Get()
 		if err != nil {
-			return FieldMapping{}, err
+			return FieldMappingEntry{}, err
 		}
 
 		result.Default = value
 	}
 
-	return NewFieldMapping(result), nil
+	return result, nil
 }
 
 // FieldMappingObjectConfig represents a config for object mapping.
