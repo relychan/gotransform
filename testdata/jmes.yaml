@@ -1,0 +1,5 @@
+# yaml-language-server: $schema=../jsonschema/gotransform.schema.json
+type: jmespath
+template:
+  type: field
+  path: data.authors

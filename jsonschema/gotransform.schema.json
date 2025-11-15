@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/TemplateTransformerConfig",
+  "$defs": {
+    "EnvAny": {
+      "anyOf": [
+        {
+          "required": [
+            "value"
+          ],
+          "title": "value"
+        },
+        {
+          "required": [
+            "env"
+          ],
+          "title": "env"
+        }
+      ],
+      "properties": {
+        "value": true,
+        "env": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "FieldMappingConfig": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/FieldMappingObjectConfig"
+        },
+        {
+          "$ref": "#/$defs/FieldMappingEntryConfig"
+        }
+      ],
+      "description": "Represents a generic field mapping config"
+    },
+    "FieldMappingEntryConfig": {
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Path is a JMESPath expression to find a value in the input data."
+        },
+        "default": {
+          "$ref": "#/$defs/EnvAny",
+          "description": "Default value to be used when no value is found when looking up the value using the path."
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "field"
+          ],
+          "description": "Type of the field mapping config"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "description": "FieldMappingEntryConfig is the entry config to lookup field values with the specified JMES path."
+    },
+    "FieldMappingObjectConfig": {
+      "properties": {
+        "properties": {
+          "additionalProperties": {
+            "$ref": "#/$defs/FieldMappingConfig"
+          },
+          "type": "object"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "object"
+          ],
+          "description": "Type of the field mapping config"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "properties",
+        "type"
+      ],
+      "description": "FieldMappingObjectConfig represents a config for object mapping."
+    },
+    "TemplateTransformerConfig": {
+      "oneOf": [
+        {
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "jmespath"
+              ],
+              "description": "Template type to be used for transforming response"
+            },
+            "template": {
+              "$ref": "#/$defs/FieldMappingConfig",
+              "description": "Template content to be transformed"
+            }
+          },
+          "type": "object",
+          "required": [
+            "type",
+            "template"
+          ],
+          "description": "Transform responses using the standard JMESPath template"
+        },
+        {
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "gotmpl"
+              ],
+              "description": "Template type to be used for transforming response"
+            },
+            "contentType": {
+              "type": "string",
+              "description": "The expected content type to be transformed"
+            },
+            "template": {
+              "type": "string",
+              "description": "Template content to be transformed"
+            }
+          },
+          "type": "object",
+          "required": [
+            "type",
+            "template",
+            "contentType"
+          ],
+          "description": "Transform responses using the standard Go template"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,7 @@
+# yaml-language-server: $schema=../jsonschema/gotransform.schema.json
+type: gotmpl
+contentType: application/json
+template: |
+  {
+    "hello": "{{index .data.authors 0}}"
+  }
