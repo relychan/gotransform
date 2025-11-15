@@ -140,6 +140,8 @@ type FieldMappingObjectConfig struct {
 	Properties map[string]FieldMappingConfig `json:"properties" yaml:"properties"`
 }
 
+var _ FieldMappingConfigInterface = (*FieldMappingObjectConfig)(nil)
+
 // Type returns the type of field mapping config.
 func (FieldMappingObjectConfig) Type() FieldMappingType {
 	return FieldMappingTypeObject
@@ -184,13 +186,30 @@ type FieldMappingEntryStringConfig struct {
 	Default *goenvconf.EnvString `json:"default,omitempty" yaml:"default,omitempty"`
 }
 
+var _ FieldMappingConfigInterface = (*FieldMappingEntryStringConfig)(nil)
+
+// Type returns the type of field mapping config.
+func (FieldMappingEntryStringConfig) Type() FieldMappingType {
+	return FieldMappingTypeField
+}
+
 // IsZero checks if the config is empty.
 func (fm FieldMappingEntryStringConfig) IsZero() bool {
 	return fm.Path == nil && fm.Default == nil
 }
 
 // Evaluate converts the config to the field mapping instance.
-func (fm FieldMappingEntryStringConfig) Evaluate() (FieldMappingEntryString, error) {
+func (fm FieldMappingEntryStringConfig) Evaluate() (FieldMapping, error) {
+	inner, err := fm.EvaluateString()
+	if err != nil {
+		return FieldMapping{}, err
+	}
+
+	return NewFieldMapping(inner), nil
+}
+
+// EvaluateString converts the config to the field mapping instance.
+func (fm FieldMappingEntryStringConfig) EvaluateString() (FieldMappingEntryString, error) {
 	if fm.IsZero() {
 		return FieldMappingEntryString{}, ErrFieldMappingEntryRequired
 	}
