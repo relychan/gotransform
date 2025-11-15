@@ -106,3 +106,11 @@ func (fm FieldMappingObject) Evaluate(data any) (any, error) {
 
 	return result, nil
 }
+
+// FieldMappingEntryString is the entry to lookup string values with the specified JMES path.
+type FieldMappingEntryString struct {
+	// Path is a JMESPath expression to find a value in the input data.
+	Path *string
+	// Default value to be used when no value is found when looking up the value using the path.
+	Default *string
+}
