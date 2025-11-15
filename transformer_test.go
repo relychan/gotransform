@@ -74,7 +74,7 @@ func TestTransformerJSON(t *testing.T) {
 	}
 }
 
-func TestJMESPathYAML(t *testing.T) {
+func TestTransformerYAML(t *testing.T) {
 	testCases := []struct {
 		File     string
 		Input    any

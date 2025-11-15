@@ -65,7 +65,7 @@ func (gtt GoTemplateTransformer) Transform(data any) (any, error) {
 
 		err := json.Unmarshal(buffer.Bytes(), &result)
 		if err != nil {
-			return nil, fmt.Errorf("failed to unmarshal JSON result. %w", err)
+			return nil, fmt.Errorf("failed to unmarshal JSON result: %w", err)
 		}
 
 		return result, nil

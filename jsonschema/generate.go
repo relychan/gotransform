@@ -13,7 +13,7 @@ import (
 func main() {
 	err := jsonSchemaConfiguration()
 	if err != nil {
-		panic(fmt.Errorf("failed to write jsonschema for RelyAuthConfig: %w", err))
+		panic(fmt.Errorf("failed to write jsonschema for TemplateTransformerConfig: %w", err))
 	}
 }
 
@@ -83,7 +83,7 @@ func jsonSchemaConfiguration() error {
 	}
 
 	return os.WriteFile( //nolint:gosec
-		"jsonschema/gostransform.schema.json",
+		"jsonschema/gotransform.schema.json",
 		schemaBytes,
 		0o644, //nolint:mnd
 	)

@@ -1,5 +1,5 @@
 {
-  "$schema": "../jsonschema/gostransform.schema.json",
+  "$schema": "../jsonschema/gotransform.schema.json",
   "type": "jmespath",
   "template": {
     "type": "object",
