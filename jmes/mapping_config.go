@@ -140,6 +140,8 @@ type FieldMappingObjectConfig struct {
 	Properties map[string]FieldMappingConfig `json:"properties" yaml:"properties"`
 }
 
+var _ FieldMappingConfigInterface = (*FieldMappingObjectConfig)(nil)
+
 // Type returns the type of field mapping config.
 func (FieldMappingObjectConfig) Type() FieldMappingType {
 	return FieldMappingTypeObject
@@ -174,4 +176,56 @@ func (fm FieldMappingObjectConfig) Evaluate() (FieldMapping, error) {
 	}
 
 	return NewFieldMapping(result), nil
+}
+
+// FieldMappingEntryStringConfig is the entry config to lookup string values with the specified JMES path.
+type FieldMappingEntryStringConfig struct {
+	// Path is a JMESPath expression to find a value in the input data.
+	Path *string `json:"path,omitempty" yaml:"path,omitempty"`
+	// Default value to be used when no value is found when looking up the value using the path.
+	Default *goenvconf.EnvString `json:"default,omitempty" yaml:"default,omitempty"`
+}
+
+var _ FieldMappingConfigInterface = (*FieldMappingEntryStringConfig)(nil)
+
+// Type returns the type of field mapping config.
+func (FieldMappingEntryStringConfig) Type() FieldMappingType {
+	return FieldMappingTypeField
+}
+
+// IsZero checks if the config is empty.
+func (fm FieldMappingEntryStringConfig) IsZero() bool {
+	return fm.Path == nil && fm.Default == nil
+}
+
+// Evaluate converts the config to the field mapping instance.
+func (fm FieldMappingEntryStringConfig) Evaluate() (FieldMapping, error) {
+	inner, err := fm.EvaluateString()
+	if err != nil {
+		return FieldMapping{}, err
+	}
+
+	return NewFieldMapping(inner), nil
+}
+
+// EvaluateString converts the config to the field mapping instance.
+func (fm FieldMappingEntryStringConfig) EvaluateString() (FieldMappingEntryString, error) {
+	if fm.IsZero() {
+		return FieldMappingEntryString{}, ErrFieldMappingEntryRequired
+	}
+
+	result := FieldMappingEntryString{
+		Path: fm.Path,
+	}
+
+	if fm.Default != nil {
+		value, err := fm.Default.Get()
+		if err != nil {
+			return FieldMappingEntryString{}, err
+		}
+
+		result.Default = &value
+	}
+
+	return result, nil
 }

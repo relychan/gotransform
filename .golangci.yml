@@ -77,6 +77,8 @@ linters:
           disabled: true
         - name: exported
           disabled: true
+        - name: max-public-structs
+          arguments: [10]
 
     funlen:
       # Checks the number of lines in a function.

@@ -3,6 +3,7 @@ package jmes
 import (
 	"errors"
 	"fmt"
+	"reflect"
 
 	"github.com/jmespath-community/go-jmespath"
 )
@@ -17,6 +18,7 @@ const (
 
 var (
 	ErrUnsupportedFieldMappingType = errors.New("unsupported field mapping type")
+	ErrFieldMappingEntryMalformed  = errors.New("field mapping entry is malformed")
 	ErrFieldMappingEntryRequired   = errors.New("field mapping entry must not be empty")
 	ErrFieldMappingObjectRequired  = errors.New("field mapping object must not be null")
 )
@@ -50,6 +52,8 @@ type FieldMappingEntry struct {
 	Default any
 }
 
+var _ FieldMappingInterface = (*FieldMappingEntry)(nil)
+
 // Type returns type of the field mapping entry.
 func (FieldMappingEntry) Type() FieldMappingType {
 	return FieldMappingTypeField
@@ -82,6 +86,8 @@ type FieldMappingObject struct {
 	Properties map[string]FieldMapping `json:"properties" yaml:"properties"`
 }
 
+var _ FieldMappingInterface = (*FieldMappingObject)(nil)
+
 // Type returns type of the field mapping entry.
 func (FieldMappingObject) Type() FieldMappingType {
 	return FieldMappingTypeObject
@@ -105,4 +111,73 @@ func (fm FieldMappingObject) Evaluate(data any) (any, error) {
 	}
 
 	return result, nil
+}
+
+// FieldMappingEntryString is the entry to lookup string values with the specified JMES path.
+type FieldMappingEntryString struct {
+	// Path is a JMESPath expression to find a value in the input data.
+	Path *string
+	// Default value to be used when no value is found when looking up the value using the path.
+	Default *string
+}
+
+var _ FieldMappingInterface = (*FieldMappingEntryString)(nil)
+
+// Type returns type of the field mapping entry string.
+func (FieldMappingEntryString) Type() FieldMappingType {
+	return FieldMappingTypeField
+}
+
+// Evaluate validates and transforms data with the specified JMES path, returning any value.
+func (fm FieldMappingEntryString) Evaluate(data any) (any, error) {
+	return fm.EvaluateString(data)
+}
+
+// EvaluateString validates and transforms data with the specified JMES path, returning string value explicitly.
+func (fm FieldMappingEntryString) EvaluateString(data any) (*string, error) {
+	if fm.Path != nil {
+		result, err := fm.evaluateStringFromPath(data)
+		if err != nil {
+			return nil, err
+		}
+
+		if result != nil {
+			return result, nil
+		}
+	}
+
+	if fm.Default != nil {
+		return fm.Default, nil
+	}
+
+	return nil, nil
+}
+
+func (fm FieldMappingEntryString) evaluateStringFromPath(data any) (*string, error) {
+	var result any
+
+	if *fm.Path != "" {
+		var err error
+
+		result, err = jmespath.Search(*fm.Path, data)
+		if err != nil {
+			return nil, fmt.Errorf("failed to evaluate mapping entry string: %w", err)
+		}
+	} else {
+		result = data
+	}
+
+	if result == nil {
+		return nil, nil
+	}
+
+	if str, ok := result.(string); ok {
+		return &str, nil
+	}
+
+	return nil, fmt.Errorf(
+		"%w, expected a string, got %s",
+		ErrFieldMappingEntryMalformed,
+		reflect.TypeOf(result),
+	)
 }
