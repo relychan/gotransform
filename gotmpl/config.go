@@ -1,6 +1,10 @@
 package gotmpl
 
-import "github.com/relychan/gotransform/transformtypes"
+import (
+	"encoding/json"
+
+	"github.com/relychan/gotransform/transformtypes"
+)
 
 // GoTemplateTransformerConfig represents configurations for the Go template transformer.
 type GoTemplateTransformerConfig struct {
@@ -22,4 +26,24 @@ func (gt GoTemplateTransformerConfig) Validate() error {
 	}
 
 	return nil
+}
+
+// MarshalJSON implements the json.Marshaler interface.
+func (gt GoTemplateTransformerConfig) MarshalJSON() ([]byte, error) {
+	result := map[string]any{
+		"type":        gt.Type(),
+		"contentType": gt.ContentType,
+		"template":    gt.Template,
+	}
+
+	return json.Marshal(result)
+}
+
+// MarshalYAML implements the yaml.Marshaler interface.
+func (gt GoTemplateTransformerConfig) MarshalYAML() (any, error) {
+	return map[string]any{
+		"type":        gt.Type(),
+		"contentType": gt.ContentType,
+		"template":    gt.Template,
+	}, nil
 }

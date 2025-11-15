@@ -1,0 +1,24 @@
+{
+  "$schema": "../jsonschema/gostransform.schema.json",
+  "type": "jmespath",
+  "template": {
+    "type": "object",
+    "properties": {
+      "foo": {
+        "type": "field",
+        "default": {
+          "value": "bar"
+        }
+      },
+      "author": {
+        "type": "object",
+        "properties": {
+          "names": {
+            "type": "field",
+            "path": "authors[*].name"
+          }
+        }
+      }
+    }
+  }
+}

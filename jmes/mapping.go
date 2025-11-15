@@ -7,6 +7,7 @@ import (
 	"github.com/jmespath-community/go-jmespath"
 )
 
+// FieldMappingType represents a field mapping type enum.
 type FieldMappingType string
 
 const (
@@ -20,19 +21,23 @@ var (
 	ErrFieldMappingObjectRequired  = errors.New("field mapping object must not be null")
 )
 
+// FieldMappingInterface abstracts a field mapping interface.
 type FieldMappingInterface interface {
 	Type() FieldMappingType
 	Evaluate(data any) (any, error)
 }
 
+// FieldMapping is a wrapper of a field mapping interface to evaluate data.
 type FieldMapping struct {
 	FieldMappingInterface
 }
 
+// NewFieldMapping creates a new field mapping instance.
 func NewFieldMapping(inner FieldMappingInterface) FieldMapping {
 	return FieldMapping{FieldMappingInterface: inner}
 }
 
+// Interface returns the inner field mapping interface.
 func (fm FieldMapping) Interface() FieldMappingInterface { //nolint:ireturn
 	return fm.FieldMappingInterface
 }
@@ -45,10 +50,12 @@ type FieldMappingEntry struct {
 	Default any
 }
 
+// Type returns type of the field mapping entry.
 func (FieldMappingEntry) Type() FieldMappingType {
 	return FieldMappingTypeField
 }
 
+// Evaluate validates and transforms data with the specified JMES path.
 func (fm FieldMappingEntry) Evaluate(data any) (any, error) {
 	if fm.Path != nil {
 		result := data
@@ -75,10 +82,12 @@ type FieldMappingObject struct {
 	Properties map[string]FieldMapping `json:"properties" yaml:"properties"`
 }
 
+// Type returns type of the field mapping entry.
 func (FieldMappingObject) Type() FieldMappingType {
 	return FieldMappingTypeObject
 }
 
+// Evaluate validates and transforms data with the specified JMES path.
 func (fm FieldMappingObject) Evaluate(data any) (any, error) {
 	result := make(map[string]any)
 

@@ -9,6 +9,8 @@ import (
 	"io"
 	"strings"
 	"text/template"
+
+	"github.com/Masterminds/sprig/v3"
 )
 
 const contentTypeHTML = "text/html"
@@ -36,9 +38,9 @@ func NewGoTemplateTransformer(
 	var err error
 
 	if strings.HasPrefix(config.ContentType, contentTypeHTML) {
-		result.template, err = htmltemplate.New(name).Parse(config.Template)
+		result.template, err = htmltemplate.New(name).Funcs(sprig.FuncMap()).Parse(config.Template)
 	} else {
-		result.template, err = template.New(name).Parse(config.Template)
+		result.template, err = template.New(name).Funcs(sprig.FuncMap()).Parse(config.Template)
 	}
 
 	if err != nil {
@@ -62,8 +64,11 @@ func (gtt GoTemplateTransformer) Transform(data any) (any, error) {
 		var result any
 
 		err := json.Unmarshal(buffer.Bytes(), &result)
+		if err != nil {
+			return nil, fmt.Errorf("failed to unmarshal JSON result. %w", err)
+		}
 
-		return result, fmt.Errorf("failed to unmarshal JSON result. %w", err)
+		return result, nil
 	default:
 		return buffer.String(), nil
 	}

@@ -1,0 +1,6 @@
+{
+  "$schema": "../jsonschema/gostransform.schema.json",
+  "type": "gotmpl",
+  "contentType": "text/html",
+  "template": "<h1>{{.hello}}</h1>"
+}

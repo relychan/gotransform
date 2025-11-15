@@ -9,6 +9,7 @@ import (
 	"github.com/relychan/gotransform/transformtypes"
 )
 
+// TemplateTransformer abstracts the interface to transform data.
 type TemplateTransformer interface {
 	// Transform processes and injects data into the template to transform data.
 	Transform(data any) (any, error)

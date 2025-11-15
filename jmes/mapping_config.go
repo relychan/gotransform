@@ -135,7 +135,7 @@ func (fm FieldMappingEntryConfig) Evaluate() (FieldMapping, error) {
 	return NewFieldMapping(result), nil
 }
 
-// FieldMappingObjectConfig is a config for object mapping.
+// FieldMappingObjectConfig represents a config for object mapping.
 type FieldMappingObjectConfig struct {
 	Properties map[string]FieldMappingConfig `json:"properties" yaml:"properties"`
 }

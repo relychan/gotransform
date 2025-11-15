@@ -1,6 +1,10 @@
 package jmes
 
-import "github.com/relychan/gotransform/transformtypes"
+import (
+	"encoding/json"
+
+	"github.com/relychan/gotransform/transformtypes"
+)
 
 // JMESTransformerConfig represents configurations for the Go template transformer.
 type JMESTransformerConfig struct {
@@ -15,10 +19,28 @@ func (JMESTransformerConfig) Type() transformtypes.TransformTemplateType {
 }
 
 // Validate checks if the config is valid.
-func (gt JMESTransformerConfig) Validate() error {
-	if gt.Template.FieldMappingConfigInterface == nil {
+func (jt JMESTransformerConfig) Validate() error {
+	if jt.Template.FieldMappingConfigInterface == nil {
 		return transformtypes.ErrTemplateContentRequired
 	}
 
 	return nil
+}
+
+// MarshalJSON implements the json.Marshaler interface.
+func (jt JMESTransformerConfig) MarshalJSON() ([]byte, error) {
+	result := map[string]any{
+		"type":     jt.Type(),
+		"template": jt.Template,
+	}
+
+	return json.Marshal(result)
+}
+
+// MarshalYAML implements the yaml.Marshaler interface.
+func (jt JMESTransformerConfig) MarshalYAML() (any, error) {
+	return map[string]any{
+		"type":     jt.Type(),
+		"template": jt.Template,
+	}, nil
 }
