@@ -114,3 +114,34 @@ type FieldMappingEntryString struct {
 	// Default value to be used when no value is found when looking up the value using the path.
 	Default *string
 }
+
+
+// Type returns type of the field mapping entry string.
+func (FieldMappingEntryString) Type() FieldMappingType {
+	return FieldMappingTypeField
+}
+
+// Evaluate validates and transforms data with the specified JMES path, returning a string value.
+func (fm FieldMappingEntryString) Evaluate(data any) (any, error) {
+	var result any
+	if fm.Path != nil {
+		if *fm.Path != "" {
+			var err error
+			result, err = jmespath.Search(*fm.Path, data)
+			if err != nil {
+				return nil, fmt.Errorf("failed to evaluate mapping entry string: %w", err)
+			}
+		} else {
+			result = data
+		}
+		if result != nil {
+			if str, ok := result.(string); ok {
+				return str, nil
+			}
+		}
+	}
+	if fm.Default != nil {
+		return *fm.Default, nil
+	}
+	return nil, nil
+}
