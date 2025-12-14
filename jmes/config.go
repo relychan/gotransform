@@ -18,6 +18,16 @@ func (JMESTransformerConfig) Type() transformtypes.TransformTemplateType {
 	return transformtypes.TransformTemplateJMESPath
 }
 
+// IsZero checks if the config is empty.
+func (jt JMESTransformerConfig) IsZero() bool {
+	return jt.Template.IsZero()
+}
+
+// Equal checks if this instance equals the target value.
+func (jt JMESTransformerConfig) Equal(target JMESTransformerConfig) bool {
+	return jt.Template.Equal(target.Template)
+}
+
 // Validate checks if the config is valid.
 func (jt JMESTransformerConfig) Validate() error {
 	if jt.Template.FieldMappingConfigInterface == nil {

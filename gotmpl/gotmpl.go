@@ -50,6 +50,17 @@ func NewGoTemplateTransformer(
 	return result, nil
 }
 
+// IsZero checks if the transformer is zero-valued.
+func (gtt GoTemplateTransformer) IsZero() bool {
+	return gtt.contentType == "" && gtt.template == nil
+}
+
+// Equal checks if this instance equals the target value.
+func (gtt GoTemplateTransformer) Equal(target GoTemplateTransformer) bool {
+	return gtt.contentType == target.contentType &&
+		gtt.template == target.template
+}
+
 // Transform processes and injects data into the template to transform data.
 func (gtt GoTemplateTransformer) Transform(data any) (any, error) {
 	var buffer bytes.Buffer

@@ -13,7 +13,17 @@ func NewJMESTemplateTransformer(template FieldMapping) *JMESTemplateTransformer 
 	}
 }
 
+// IsZero checks if the JMESTemplateTransformer is empty (zero-valued).
+func (jtt JMESTemplateTransformer) IsZero() bool {
+	return jtt.template.IsZero()
+}
+
 // Transform processes and injects data into the template to transform data.
 func (jtt JMESTemplateTransformer) Transform(data any) (any, error) {
 	return jtt.template.Evaluate(data)
+}
+
+// Equal checks if this instance equals the target value.
+func (jtt JMESTemplateTransformer) Equal(target JMESTemplateTransformer) bool {
+	return jtt.template.Equal(target.template)
 }

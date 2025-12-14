@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/hasura/goenvconf"
+	"github.com/relychan/goutils"
 	"go.yaml.in/yaml/v4"
 )
 
@@ -31,6 +32,37 @@ func NewFieldMappingConfig(inner FieldMappingConfigInterface) FieldMappingConfig
 // Interface returns the underlying config interface.
 func (fm FieldMappingConfig) Interface() FieldMappingConfigInterface {
 	return fm.FieldMappingConfigInterface
+}
+
+// IsZero checks if the config is empty.
+func (fm FieldMappingConfig) IsZero() bool {
+	return fm.FieldMappingConfigInterface == nil
+}
+
+// Equal checks if this instance equals the target value.
+func (fm FieldMappingConfig) Equal(target FieldMappingConfig) bool {
+	if fm.FieldMappingConfigInterface == target.FieldMappingConfigInterface {
+		return true
+	}
+
+	if fm.FieldMappingConfigInterface == nil || target.FieldMappingConfigInterface == nil {
+		return false
+	}
+
+	if fm.Type() != target.Type() {
+		return false
+	}
+
+	switch fmi := fm.FieldMappingConfigInterface.(type) {
+	case *FieldMappingEntryConfig:
+		return goutils.DeepEqual(fmi, target.FieldMappingConfigInterface, true)
+	case *FieldMappingEntryStringConfig:
+		return goutils.DeepEqual(fmi, target.FieldMappingConfigInterface, true)
+	case *FieldMappingObjectConfig:
+		return goutils.DeepEqual(fmi, target.FieldMappingConfigInterface, true)
+	default:
+		return false
+	}
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
@@ -113,6 +145,12 @@ func (fm FieldMappingEntryConfig) IsZero() bool {
 	return fm.Path == nil && fm.Default == nil
 }
 
+// Equal checks if this instance equals the target value.
+func (fm FieldMappingEntryConfig) Equal(target FieldMappingEntryConfig) bool {
+	return goutils.EqualComparablePtr(fm.Path, target.Path) &&
+		goutils.DeepEqual(fm.Default, target.Default, false)
+}
+
 // Evaluate converts the config to the field mapping instance.
 func (fm FieldMappingEntryConfig) Evaluate() (FieldMapping, error) {
 	entry, err := fm.EvaluateEntry()
@@ -162,6 +200,11 @@ func (fm FieldMappingObjectConfig) IsZero() bool {
 	return fm.Properties == nil
 }
 
+// Equal checks if this instance equals the target value.
+func (fm FieldMappingObjectConfig) Equal(target FieldMappingObjectConfig) bool {
+	return goutils.EqualMap(fm.Properties, target.Properties, true)
+}
+
 // Evaluate converts the config to the field mapping instance.
 func (fm FieldMappingObjectConfig) Evaluate() (FieldMapping, error) {
 	if fm.IsZero() {
@@ -206,6 +249,12 @@ func (FieldMappingEntryStringConfig) Type() FieldMappingType {
 // IsZero checks if the config is empty.
 func (fm FieldMappingEntryStringConfig) IsZero() bool {
 	return fm.Path == nil && fm.Default == nil
+}
+
+// Equal checks if this instance equals the target value.
+func (fm FieldMappingEntryStringConfig) Equal(target FieldMappingEntryStringConfig) bool {
+	return goutils.EqualComparablePtr(fm.Path, target.Path) &&
+		goutils.EqualPtr(fm.Default, target.Default)
 }
 
 // Evaluate converts the config to the field mapping instance.

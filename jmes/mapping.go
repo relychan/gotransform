@@ -6,6 +6,7 @@ import (
 	"reflect"
 
 	"github.com/jmespath-community/go-jmespath"
+	"github.com/relychan/goutils"
 )
 
 // FieldMappingType represents a field mapping type enum.
@@ -25,6 +26,8 @@ var (
 
 // FieldMappingInterface abstracts a field mapping interface.
 type FieldMappingInterface interface {
+	goutils.IsZeroer
+
 	Type() FieldMappingType
 	Evaluate(data any) (any, error)
 }
@@ -44,6 +47,37 @@ func (fm FieldMapping) Interface() FieldMappingInterface { //nolint:ireturn
 	return fm.FieldMappingInterface
 }
 
+// IsZero checks if the field mapping is empty or zero-valued.
+func (fm FieldMapping) IsZero() bool {
+	return fm.FieldMappingInterface == nil || fm.FieldMappingInterface.IsZero()
+}
+
+// Equal checks if this instance equals the target value.
+func (fm FieldMapping) Equal(target FieldMapping) bool {
+	if fm.FieldMappingInterface == target.FieldMappingInterface {
+		return true
+	}
+
+	if fm.FieldMappingInterface == nil || target.FieldMappingInterface == nil {
+		return false
+	}
+
+	if fm.Type() != target.Type() {
+		return false
+	}
+
+	switch fmi := fm.FieldMappingInterface.(type) {
+	case *FieldMappingEntry:
+		return goutils.DeepEqual(fmi, target.FieldMappingInterface, true)
+	case *FieldMappingEntryString:
+		return goutils.DeepEqual(fmi, target.FieldMappingInterface, true)
+	case *FieldMappingObject:
+		return goutils.DeepEqual(fmi, target.FieldMappingInterface, true)
+	default:
+		return false
+	}
+}
+
 // FieldMappingEntry is the entry to lookup field values with the specified JMES path.
 type FieldMappingEntry struct {
 	// Path is a JMESPath expression to find a value in the input data.
@@ -57,6 +91,17 @@ var _ FieldMappingInterface = (*FieldMappingEntry)(nil)
 // Type returns type of the field mapping entry.
 func (FieldMappingEntry) Type() FieldMappingType {
 	return FieldMappingTypeField
+}
+
+// IsZero checks if the field mapping entry is empty (zero-valued).
+func (fm FieldMappingEntry) IsZero() bool {
+	return (fm.Path == nil || *fm.Path == "") && fm.Default == nil
+}
+
+// Equal checks if this instance equals the target value.
+func (fm FieldMappingEntry) Equal(target FieldMappingEntry) bool {
+	return goutils.EqualComparablePtr(fm.Path, target.Path) &&
+		goutils.DeepEqual(fm.Default, target.Default, false)
 }
 
 // Evaluate validates and transforms data with the specified JMES path.
@@ -93,6 +138,16 @@ func (FieldMappingObject) Type() FieldMappingType {
 	return FieldMappingTypeObject
 }
 
+// IsZero checks if the field mapping object is empty.
+func (fm FieldMappingObject) IsZero() bool {
+	return len(fm.Properties) == 0
+}
+
+// Equal checks if this instance equals the target value.
+func (fm FieldMappingObject) Equal(target FieldMappingObject) bool {
+	return goutils.EqualMap(fm.Properties, target.Properties, false)
+}
+
 // Evaluate validates and transforms data with the specified JMES path.
 func (fm FieldMappingObject) Evaluate(data any) (any, error) {
 	result := make(map[string]any)
@@ -126,6 +181,17 @@ var _ FieldMappingInterface = (*FieldMappingEntryString)(nil)
 // Type returns type of the field mapping entry string.
 func (FieldMappingEntryString) Type() FieldMappingType {
 	return FieldMappingTypeField
+}
+
+// IsZero checks if the field mapping entry string is empty or zero-valued.
+func (fm FieldMappingEntryString) IsZero() bool {
+	return (fm.Path == nil || *fm.Path == "") && fm.Default == nil
+}
+
+// Equal checks if this instance equals the target value.
+func (fm FieldMappingEntryString) Equal(target FieldMappingEntryString) bool {
+	return goutils.EqualComparablePtr(fm.Path, target.Path) &&
+		goutils.EqualComparablePtr(fm.Default, target.Default)
 }
 
 // Evaluate validates and transforms data with the specified JMES path, returning any value.
