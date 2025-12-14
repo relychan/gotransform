@@ -6,6 +6,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/relychan/gotransform/gotmpl"
+	"github.com/relychan/gotransform/jmes"
 	"go.yaml.in/yaml/v4"
 )
 
@@ -82,11 +84,11 @@ func TestTransformerJSON(t *testing.T) {
 			t.Fatal("expected equal, got false")
 		}
 
-		if EqualTemplateTransformer(transformers[0], transformers[1]) {
+		if EqualTemplateTransformer(transformers[0], jmes.NewJMESTemplateTransformer(jmes.FieldMapping{})) {
 			t.Fatal("expected not equal, got true")
 		}
 
-		if EqualTemplateTransformer(transformers[1], transformers[0]) {
+		if EqualTemplateTransformer(transformers[1], gotmpl.GoTemplateTransformer{}) {
 			t.Fatal("expected not equal, got true")
 		}
 

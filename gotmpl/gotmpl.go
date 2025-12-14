@@ -11,6 +11,7 @@ import (
 	"text/template"
 
 	"github.com/Masterminds/sprig/v3"
+	"github.com/relychan/gotransform/transformtypes"
 )
 
 const contentTypeHTML = "text/html"
@@ -48,6 +49,11 @@ func NewGoTemplateTransformer(
 	}
 
 	return result, nil
+}
+
+// Type returns the transform template type of this instance.
+func (GoTemplateTransformer) Type() transformtypes.TransformTemplateType {
+	return transformtypes.TransformTemplateGo
 }
 
 // IsZero checks if the transformer is zero-valued.
