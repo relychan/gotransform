@@ -67,7 +67,7 @@ func TestFieldMappingEntryConfig_EvaluateEntry(t *testing.T) {
 		path := "name"
 		config := FieldMappingEntryConfig{Path: &path}
 
-		entry, err := config.EvaluateEntry()
+		entry, err := config.EvaluateEntryEnv()
 		if err != nil {
 			t.Fatalf("expected no error, got: %v", err)
 		}
@@ -82,7 +82,7 @@ func TestFieldMappingEntryConfig_EvaluateEntry(t *testing.T) {
 		defaultVal := goenvconf.NewEnvAny("", "default")
 		config := FieldMappingEntryConfig{Path: &path, Default: &defaultVal}
 
-		entry, err := config.EvaluateEntry()
+		entry, err := config.EvaluateEntryEnv()
 		if err != nil {
 			t.Fatalf("expected no error, got: %v", err)
 		}
@@ -95,7 +95,7 @@ func TestFieldMappingEntryConfig_EvaluateEntry(t *testing.T) {
 	t.Run("error with empty config", func(t *testing.T) {
 		config := FieldMappingEntryConfig{}
 
-		_, err := config.EvaluateEntry()
+		_, err := config.EvaluateEntryEnv()
 		if err == nil {
 			t.Fatal("expected error for empty config, got nil")
 		}
@@ -182,7 +182,7 @@ func TestFieldMappingObjectConfig_Evaluate(t *testing.T) {
 			},
 		}
 
-		mapping, err := config.Evaluate()
+		mapping, err := config.EvaluateEnv()
 		if err != nil {
 			t.Fatalf("expected no error, got: %v", err)
 		}
@@ -204,7 +204,7 @@ func TestFieldMappingObjectConfig_Evaluate(t *testing.T) {
 	t.Run("error with nil config", func(t *testing.T) {
 		config := FieldMappingObjectConfig{}
 
-		_, err := config.Evaluate()
+		_, err := config.EvaluateEnv()
 		if err == nil {
 			t.Fatal("expected error for nil config, got nil")
 		}
@@ -221,7 +221,7 @@ func TestFieldMappingObjectConfig_Evaluate(t *testing.T) {
 			},
 		}
 
-		_, err := config.Evaluate()
+		_, err := config.EvaluateEnv()
 		if err == nil {
 			t.Fatal("expected error for nil field mapping, got nil")
 		}
@@ -257,7 +257,7 @@ func TestFieldMappingEntryStringConfig_EvaluateString(t *testing.T) {
 		path := "name"
 		config := FieldMappingEntryStringConfig{Path: &path}
 
-		entry, err := config.EvaluateString()
+		entry, err := config.EvaluateString(goenvconf.GetOSEnv)
 		if err != nil {
 			t.Fatalf("expected no error, got: %v", err)
 		}
@@ -272,7 +272,7 @@ func TestFieldMappingEntryStringConfig_EvaluateString(t *testing.T) {
 		defaultVal := goenvconf.NewEnvString("", "default")
 		config := FieldMappingEntryStringConfig{Path: &path, Default: &defaultVal}
 
-		entry, err := config.EvaluateString()
+		entry, err := config.EvaluateString(goenvconf.GetOSEnv)
 		if err != nil {
 			t.Fatalf("expected no error, got: %v", err)
 		}
@@ -285,7 +285,7 @@ func TestFieldMappingEntryStringConfig_EvaluateString(t *testing.T) {
 	t.Run("error with empty config", func(t *testing.T) {
 		config := FieldMappingEntryStringConfig{}
 
-		_, err := config.EvaluateString()
+		_, err := config.EvaluateString(goenvconf.GetOSEnv)
 		if err == nil {
 			t.Fatal("expected error for empty config, got nil")
 		}
