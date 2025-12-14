@@ -171,4 +171,3 @@ func TestJMESTemplateTransformer_Equal(t *testing.T) {
 		}
 	})
 }
-

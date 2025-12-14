@@ -120,4 +120,3 @@ func TestJMESTransformerConfig_Equal(t *testing.T) {
 		}
 	})
 }
-

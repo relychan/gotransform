@@ -148,4 +148,3 @@ type: unsupported
 		t.Fatal("expected error for unsupported type, got nil")
 	}
 }
-
