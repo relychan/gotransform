@@ -7,10 +7,12 @@ import (
 	"github.com/relychan/gotransform/gotmpl"
 	"github.com/relychan/gotransform/jmes"
 	"github.com/relychan/gotransform/transformtypes"
+	"github.com/relychan/goutils"
 )
 
 // TemplateTransformer abstracts the interface to transform data.
 type TemplateTransformer interface {
+	goutils.IsZeroer
 	// Transform processes and injects data into the template to transform data.
 	Transform(data any) (any, error)
 }

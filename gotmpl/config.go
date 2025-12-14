@@ -19,6 +19,17 @@ func (GoTemplateTransformerConfig) Type() transformtypes.TransformTemplateType {
 	return transformtypes.TransformTemplateGo
 }
 
+// IsZero checks if the config is empty.
+func (gt GoTemplateTransformerConfig) IsZero() bool {
+	return gt.ContentType == "" && gt.Template == ""
+}
+
+// Equal checks if this instance equals the target value.
+func (gt GoTemplateTransformerConfig) Equal(target GoTemplateTransformerConfig) bool {
+	return gt.ContentType == target.ContentType &&
+		gt.Template == target.Template
+}
+
 // Validate checks if the config is valid.
 func (gt GoTemplateTransformerConfig) Validate() error {
 	if gt.Template == "" {
