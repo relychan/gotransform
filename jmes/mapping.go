@@ -47,7 +47,7 @@ func (fm FieldMapping) Interface() FieldMappingInterface { //nolint:ireturn
 	return fm.FieldMappingInterface
 }
 
-// IsZero checks if the config is empty.
+// IsZero checks if the field mapping is empty or zero-valued.
 func (fm FieldMapping) IsZero() bool {
 	return fm.FieldMappingInterface == nil || fm.FieldMappingInterface.IsZero()
 }
@@ -93,7 +93,7 @@ func (FieldMappingEntry) Type() FieldMappingType {
 	return FieldMappingTypeField
 }
 
-// IsZero checks if the config is empty.
+// IsZero checks if the field mapping entry is empty (zero-valued).
 func (fm FieldMappingEntry) IsZero() bool {
 	return (fm.Path == nil || *fm.Path == "") && fm.Default == nil
 }
@@ -138,7 +138,7 @@ func (FieldMappingObject) Type() FieldMappingType {
 	return FieldMappingTypeObject
 }
 
-// IsZero checks if the config is empty.
+// IsZero checks if the field mapping object is empty.
 func (fm FieldMappingObject) IsZero() bool {
 	return len(fm.Properties) == 0
 }
@@ -183,7 +183,7 @@ func (FieldMappingEntryString) Type() FieldMappingType {
 	return FieldMappingTypeField
 }
 
-// IsZero checks if the config is empty.
+// IsZero checks if the field mapping entry string is empty or zero-valued.
 func (fm FieldMappingEntryString) IsZero() bool {
 	return (fm.Path == nil || *fm.Path == "") && fm.Default == nil
 }

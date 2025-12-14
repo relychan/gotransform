@@ -13,7 +13,7 @@ func NewJMESTemplateTransformer(template FieldMapping) *JMESTemplateTransformer 
 	}
 }
 
-// IsZero checks if the config is empty.
+// IsZero checks if the JMESTemplateTransformer is empty (zero-valued).
 func (jtt JMESTemplateTransformer) IsZero() bool {
 	return jtt.template.IsZero()
 }

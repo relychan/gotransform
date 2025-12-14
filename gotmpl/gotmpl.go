@@ -50,7 +50,7 @@ func NewGoTemplateTransformer(
 	return result, nil
 }
 
-// IsZero checks if the config is empty.
+// IsZero checks if the transformer is zero-valued.
 func (gtt GoTemplateTransformer) IsZero() bool {
 	return gtt.contentType == "" && gtt.template == nil
 }
