@@ -1,6 +1,8 @@
 // Package jmes implements the transform template using JMESPath templates.
 package jmes
 
+import "github.com/relychan/gotransform/transformtypes"
+
 // JMESTemplateTransformer implements the transform template using JMESPath templates.
 type JMESTemplateTransformer struct {
 	template FieldMapping
@@ -11,6 +13,11 @@ func NewJMESTemplateTransformer(template FieldMapping) *JMESTemplateTransformer 
 	return &JMESTemplateTransformer{
 		template: template,
 	}
+}
+
+// Type returns the transform template type of this instance.
+func (JMESTemplateTransformer) Type() transformtypes.TransformTemplateType {
+	return transformtypes.TransformTemplateJMESPath
 }
 
 // IsZero checks if the JMESTemplateTransformer is empty (zero-valued).
