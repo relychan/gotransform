@@ -39,6 +39,20 @@ func TestTemplateTransformerConfig_UnmarshalJSON_GoTemplate(t *testing.T) {
 	if goConfig.Template != "{{.name}}" {
 		t.Errorf("expected template to be '{{.name}}', got: %s", goConfig.Template)
 	}
+
+	if config.IsZero() {
+		t.Error("expected non-zero, got true")
+	}
+
+	if !config.Equal(TemplateTransformerConfig{
+		TemplateTransformerConfig: goConfig,
+	}) {
+		t.Error("expected equal, got false")
+	}
+
+	if config.Equal(TemplateTransformerConfig{}) {
+		t.Error("expected not-equal, got equal")
+	}
 }
 
 func TestTemplateTransformerConfig_UnmarshalJSON_JMESPath(t *testing.T) {

@@ -7,6 +7,7 @@ import (
 	"github.com/relychan/gotransform/gotmpl"
 	"github.com/relychan/gotransform/jmes"
 	"github.com/relychan/gotransform/transformtypes"
+	"github.com/relychan/goutils"
 	"go.yaml.in/yaml/v4"
 )
 
@@ -21,6 +22,31 @@ type rawTemplateTransformerConfig struct {
 
 func (j TemplateTransformerConfig) Interface() transformtypes.TemplateTransformerConfig {
 	return j.TemplateTransformerConfig
+}
+
+// IsZero checks if the config is empty.
+func (j TemplateTransformerConfig) IsZero() bool {
+	return j.TemplateTransformerConfig == nil || j.Type() == ""
+}
+
+// Equal checks if this instance equals the target value.
+func (j TemplateTransformerConfig) Equal(target TemplateTransformerConfig) bool {
+	if j.TemplateTransformerConfig == target.TemplateTransformerConfig {
+		return true
+	}
+
+	if j.TemplateTransformerConfig == nil || target.TemplateTransformerConfig == nil {
+		return false
+	}
+
+	switch c := j.TemplateTransformerConfig.(type) {
+	case *gotmpl.GoTemplateTransformerConfig:
+		return goutils.DeepEqual(c, target.TemplateTransformerConfig, true)
+	case *jmes.JMESTransformerConfig:
+		return goutils.DeepEqual(c, target.TemplateTransformerConfig, true)
+	default:
+		return false
+	}
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
