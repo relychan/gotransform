@@ -1,10 +1,15 @@
 package jmes
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/hasura/goenvconf"
+)
 
 // EvaluateObjectFieldMappingEntries validate and resolve the entry mapping fields of an object.
 func EvaluateObjectFieldMappingEntries(
 	input map[string]FieldMappingEntryConfig,
+	getEnvFunc goenvconf.GetEnvFunc,
 ) (map[string]FieldMappingEntry, error) {
 	props := make(map[string]FieldMappingEntry)
 
@@ -13,7 +18,7 @@ func EvaluateObjectFieldMappingEntries(
 	}
 
 	for key, envField := range input {
-		field, err := envField.EvaluateEntry()
+		field, err := envField.EvaluateEntry(getEnvFunc)
 		if err != nil {
 			return nil, fmt.Errorf("%s: %w", key, err)
 		}
@@ -27,6 +32,7 @@ func EvaluateObjectFieldMappingEntries(
 // EvaluateObjectFieldMappingStringEntries validate and resolve the entry mapping for string fields of an object.
 func EvaluateObjectFieldMappingStringEntries(
 	input map[string]FieldMappingEntryStringConfig,
+	getEnvFunc goenvconf.GetEnvFunc,
 ) (map[string]FieldMappingEntryString, error) {
 	props := make(map[string]FieldMappingEntryString)
 
@@ -35,7 +41,7 @@ func EvaluateObjectFieldMappingStringEntries(
 	}
 
 	for key, envField := range input {
-		field, err := envField.EvaluateString()
+		field, err := envField.EvaluateString(getEnvFunc)
 		if err != nil {
 			return nil, fmt.Errorf("%s: %w", key, err)
 		}

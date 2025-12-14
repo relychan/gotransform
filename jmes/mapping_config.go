@@ -12,7 +12,8 @@ import (
 // FieldMappingConfigInterface abstracts the interface of a field mapping config.
 type FieldMappingConfigInterface interface {
 	Type() FieldMappingType
-	Evaluate() (FieldMapping, error)
+	Evaluate(getEnvFunc goenvconf.GetEnvFunc) (FieldMapping, error)
+	EvaluateEnv() (FieldMapping, error)
 }
 
 // FieldMappingConfig represents a generic field mapping config.
@@ -151,9 +152,9 @@ func (fm FieldMappingEntryConfig) Equal(target FieldMappingEntryConfig) bool {
 		goutils.DeepEqual(fm.Default, target.Default, false)
 }
 
-// Evaluate converts the config to the field mapping instance.
-func (fm FieldMappingEntryConfig) Evaluate() (FieldMapping, error) {
-	entry, err := fm.EvaluateEntry()
+// EvaluateEnv converts the config to the field mapping instance with environment variables.
+func (fm FieldMappingEntryConfig) EvaluateEnv() (FieldMapping, error) {
+	entry, err := fm.EvaluateEntryEnv()
 	if err != nil {
 		return FieldMapping{}, err
 	}
@@ -161,8 +162,20 @@ func (fm FieldMappingEntryConfig) Evaluate() (FieldMapping, error) {
 	return NewFieldMapping(entry), nil
 }
 
-// EvaluateEntry converts the config to the field mapping entry instance.
-func (fm FieldMappingEntryConfig) EvaluateEntry() (FieldMappingEntry, error) {
+// Evaluate converts the config to the field mapping instance with a custom env loader.
+func (fm FieldMappingEntryConfig) Evaluate(getEnvFunc goenvconf.GetEnvFunc) (FieldMapping, error) {
+	entry, err := fm.EvaluateEntry(getEnvFunc)
+	if err != nil {
+		return FieldMapping{}, err
+	}
+
+	return NewFieldMapping(entry), nil
+}
+
+// EvaluateEntry converts the config to the field mapping entry instance with a custom env loader.
+func (fm FieldMappingEntryConfig) EvaluateEntry(
+	getEnvFunc goenvconf.GetEnvFunc,
+) (FieldMappingEntry, error) {
 	if fm.IsZero() {
 		return FieldMappingEntry{}, ErrFieldMappingEntryRequired
 	}
@@ -172,7 +185,7 @@ func (fm FieldMappingEntryConfig) EvaluateEntry() (FieldMappingEntry, error) {
 	}
 
 	if fm.Default != nil {
-		value, err := fm.Default.Get()
+		value, err := fm.Default.GetCustom(getEnvFunc)
 		if err != nil {
 			return FieldMappingEntry{}, err
 		}
@@ -181,6 +194,11 @@ func (fm FieldMappingEntryConfig) EvaluateEntry() (FieldMappingEntry, error) {
 	}
 
 	return result, nil
+}
+
+// EvaluateEntryEnv converts the config to the field mapping entry instance.
+func (fm FieldMappingEntryConfig) EvaluateEntryEnv() (FieldMappingEntry, error) {
+	return fm.EvaluateEntry(goenvconf.GetOSEnv)
 }
 
 // FieldMappingObjectConfig represents a config for object mapping.
@@ -205,8 +223,13 @@ func (fm FieldMappingObjectConfig) Equal(target FieldMappingObjectConfig) bool {
 	return goutils.EqualMap(fm.Properties, target.Properties, true)
 }
 
+// EvaluateEnv converts the config to the field mapping instance with environment variables.
+func (fm FieldMappingObjectConfig) EvaluateEnv() (FieldMapping, error) {
+	return fm.Evaluate(goenvconf.GetOSEnv)
+}
+
 // Evaluate converts the config to the field mapping instance.
-func (fm FieldMappingObjectConfig) Evaluate() (FieldMapping, error) {
+func (fm FieldMappingObjectConfig) Evaluate(getEnvFunc goenvconf.GetEnvFunc) (FieldMapping, error) {
 	if fm.IsZero() {
 		return FieldMapping{}, ErrFieldMappingObjectRequired
 	}
@@ -220,7 +243,7 @@ func (fm FieldMappingObjectConfig) Evaluate() (FieldMapping, error) {
 			return FieldMapping{}, fmt.Errorf("%s: %w", key, ErrFieldMappingEntryRequired)
 		}
 
-		field, err := fieldConfig.Evaluate()
+		field, err := fieldConfig.Evaluate(getEnvFunc)
 		if err != nil {
 			return FieldMapping{}, fmt.Errorf("%s: %w", key, err)
 		}
@@ -257,9 +280,16 @@ func (fm FieldMappingEntryStringConfig) Equal(target FieldMappingEntryStringConf
 		goutils.EqualPtr(fm.Default, target.Default)
 }
 
+// EvaluateEnv converts the config to the field mapping instance with environment variables.
+func (fm FieldMappingEntryStringConfig) EvaluateEnv() (FieldMapping, error) {
+	return fm.Evaluate(goenvconf.GetOSEnv)
+}
+
 // Evaluate converts the config to the field mapping instance.
-func (fm FieldMappingEntryStringConfig) Evaluate() (FieldMapping, error) {
-	inner, err := fm.EvaluateString()
+func (fm FieldMappingEntryStringConfig) Evaluate(
+	getEnvFunc goenvconf.GetEnvFunc,
+) (FieldMapping, error) {
+	inner, err := fm.EvaluateString(getEnvFunc)
 	if err != nil {
 		return FieldMapping{}, err
 	}
@@ -268,7 +298,9 @@ func (fm FieldMappingEntryStringConfig) Evaluate() (FieldMapping, error) {
 }
 
 // EvaluateString converts the config to the field mapping instance.
-func (fm FieldMappingEntryStringConfig) EvaluateString() (FieldMappingEntryString, error) {
+func (fm FieldMappingEntryStringConfig) EvaluateString(
+	getEnvFunc goenvconf.GetEnvFunc,
+) (FieldMappingEntryString, error) {
 	if fm.IsZero() {
 		return FieldMappingEntryString{}, ErrFieldMappingEntryRequired
 	}
@@ -278,7 +310,7 @@ func (fm FieldMappingEntryStringConfig) EvaluateString() (FieldMappingEntryStrin
 	}
 
 	if fm.Default != nil {
-		value, err := fm.Default.Get()
+		value, err := fm.Default.GetCustom(getEnvFunc)
 		if err != nil {
 			return FieldMappingEntryString{}, err
 		}

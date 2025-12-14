@@ -9,7 +9,7 @@ import (
 func TestEvaluateObjectFieldMappingEntries(t *testing.T) {
 	t.Run("empty input", func(t *testing.T) {
 		input := map[string]FieldMappingEntryConfig{}
-		result, err := EvaluateObjectFieldMappingEntries(input)
+		result, err := EvaluateObjectFieldMappingEntries(input, goenvconf.GetOSEnv)
 		if err != nil {
 			t.Fatalf("expected no error, got: %v", err)
 		}
@@ -27,7 +27,7 @@ func TestEvaluateObjectFieldMappingEntries(t *testing.T) {
 			"userAge":  {Path: &agePath},
 		}
 
-		result, err := EvaluateObjectFieldMappingEntries(input)
+		result, err := EvaluateObjectFieldMappingEntries(input, goenvconf.GetOSEnv)
 		if err != nil {
 			t.Fatalf("expected no error, got: %v", err)
 		}
@@ -52,7 +52,7 @@ func TestEvaluateObjectFieldMappingEntries(t *testing.T) {
 			"userName": {Path: &namePath, Default: &defaultValue},
 		}
 
-		result, err := EvaluateObjectFieldMappingEntries(input)
+		result, err := EvaluateObjectFieldMappingEntries(input, goenvconf.GetOSEnv)
 		if err != nil {
 			t.Fatalf("expected no error, got: %v", err)
 		}
@@ -71,7 +71,7 @@ func TestEvaluateObjectFieldMappingEntries(t *testing.T) {
 			"userName": {},
 		}
 
-		_, err := EvaluateObjectFieldMappingEntries(input)
+		_, err := EvaluateObjectFieldMappingEntries(input, goenvconf.GetOSEnv)
 		if err == nil {
 			t.Fatal("expected error for empty entry, got nil")
 		}
@@ -81,7 +81,7 @@ func TestEvaluateObjectFieldMappingEntries(t *testing.T) {
 func TestEvaluateObjectFieldMappingStringEntries(t *testing.T) {
 	t.Run("empty input", func(t *testing.T) {
 		input := map[string]FieldMappingEntryStringConfig{}
-		result, err := EvaluateObjectFieldMappingStringEntries(input)
+		result, err := EvaluateObjectFieldMappingStringEntries(input, goenvconf.GetOSEnv)
 		if err != nil {
 			t.Fatalf("expected no error, got: %v", err)
 		}
@@ -99,7 +99,7 @@ func TestEvaluateObjectFieldMappingStringEntries(t *testing.T) {
 			"userEmail": {Path: &emailPath},
 		}
 
-		result, err := EvaluateObjectFieldMappingStringEntries(input)
+		result, err := EvaluateObjectFieldMappingStringEntries(input, goenvconf.GetOSEnv)
 		if err != nil {
 			t.Fatalf("expected no error, got: %v", err)
 		}
@@ -124,7 +124,7 @@ func TestEvaluateObjectFieldMappingStringEntries(t *testing.T) {
 			"userName": {Path: &namePath, Default: &defaultValue},
 		}
 
-		result, err := EvaluateObjectFieldMappingStringEntries(input)
+		result, err := EvaluateObjectFieldMappingStringEntries(input, goenvconf.GetOSEnv)
 		if err != nil {
 			t.Fatalf("expected no error, got: %v", err)
 		}
@@ -143,7 +143,7 @@ func TestEvaluateObjectFieldMappingStringEntries(t *testing.T) {
 			"userName": {},
 		}
 
-		_, err := EvaluateObjectFieldMappingStringEntries(input)
+		_, err := EvaluateObjectFieldMappingStringEntries(input, goenvconf.GetOSEnv)
 		if err == nil {
 			t.Fatal("expected error for empty entry, got nil")
 		}

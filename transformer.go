@@ -4,6 +4,7 @@ package gotransform
 import (
 	"fmt"
 
+	"github.com/hasura/goenvconf"
 	"github.com/relychan/gotransform/gotmpl"
 	"github.com/relychan/gotransform/jmes"
 	"github.com/relychan/gotransform/transformtypes"
@@ -23,6 +24,7 @@ type TemplateTransformer interface {
 func NewTransformerFromConfig(
 	name string,
 	config TemplateTransformerConfig,
+	getEnvFunc goenvconf.GetEnvFunc,
 ) (TemplateTransformer, error) {
 	err := config.Validate()
 	if err != nil {
@@ -31,7 +33,7 @@ func NewTransformerFromConfig(
 
 	switch conf := config.Interface().(type) {
 	case *jmes.JMESTransformerConfig:
-		fieldMapping, err := conf.Template.Evaluate()
+		fieldMapping, err := conf.Template.Evaluate(getEnvFunc)
 		if err != nil {
 			return nil, err
 		}

@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/hasura/goenvconf"
 	"github.com/relychan/gotransform/gotmpl"
 	"github.com/relychan/gotransform/jmes"
 	"go.yaml.in/yaml/v4"
@@ -61,7 +62,7 @@ func TestTransformerJSON(t *testing.T) {
 				t.Fatalf("failed to decode JSON: %s", err)
 			}
 
-			transformer, err := NewTransformerFromConfig("test", config)
+			transformer, err := NewTransformerFromConfig("test", config, goenvconf.GetOSEnv)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -140,7 +141,7 @@ func TestTransformerYAML(t *testing.T) {
 				t.Fatalf("failed to decode YAML: %s", err)
 			}
 
-			transformer, err := NewTransformerFromConfig("test", config)
+			transformer, err := NewTransformerFromConfig("test", config, goenvconf.GetOSEnv)
 			if err != nil {
 				t.Fatal(err)
 			}
