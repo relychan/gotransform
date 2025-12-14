@@ -43,6 +43,8 @@ func TestTransformerJSON(t *testing.T) {
 		},
 	}
 
+	transformers := []TemplateTransformer{}
+
 	for _, tc := range testCases {
 		t.Run(tc.File, func(t *testing.T) {
 			rawBytes, err := os.ReadFile(tc.File)
@@ -70,8 +72,28 @@ func TestTransformerJSON(t *testing.T) {
 			if !reflect.DeepEqual(tc.Expected, result) {
 				t.Fatalf("not equal, expected: %v, got: %v", tc.Expected, result)
 			}
+
+			transformers = append(transformers, transformer)
 		})
 	}
+
+	t.Run("test_equal", func(t *testing.T) {
+		if !EqualTemplateTransformer(transformers[0], transformers[0]) {
+			t.Fatal("expected equal, got false")
+		}
+
+		if EqualTemplateTransformer(transformers[0], transformers[1]) {
+			t.Fatal("expected not equal, got true")
+		}
+
+		if EqualTemplateTransformer(transformers[1], transformers[0]) {
+			t.Fatal("expected not equal, got true")
+		}
+
+		if EqualTemplateTransformer(transformers[0], nil) {
+			t.Fatal("expected not equal, got true")
+		}
+	})
 }
 
 func TestTransformerYAML(t *testing.T) {
