@@ -44,7 +44,7 @@ func NewTransformerFromConfig(
 	}
 }
 
-// EqualTemplateTransformer checks if both template transformer are equal.
+// EqualTemplateTransformer checks if both template transformers are equal.
 func EqualTemplateTransformer(a, b TemplateTransformer) bool {
 	if a == b {
 		return true
