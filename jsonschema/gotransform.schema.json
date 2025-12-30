@@ -18,9 +18,12 @@
         }
       ],
       "properties": {
-        "value": true,
+        "value": {
+          "description": "Default literal value if the env is empty"
+        },
         "env": {
-          "type": "string"
+          "type": "string",
+          "description": "Environment variable to be evaluated"
         }
       },
       "additionalProperties": false,
@@ -29,10 +32,12 @@
     "FieldMappingConfig": {
       "oneOf": [
         {
-          "$ref": "#/$defs/FieldMappingObjectConfig"
+          "$ref": "#/$defs/FieldMappingObjectConfig",
+          "description": "Mapping configurations for object fields"
         },
         {
-          "$ref": "#/$defs/FieldMappingEntryConfig"
+          "$ref": "#/$defs/FieldMappingEntryConfig",
+          "description": "The mapping configuration for an object field"
         }
       ],
       "description": "Represents a generic field mapping config"
@@ -68,7 +73,8 @@
           "additionalProperties": {
             "$ref": "#/$defs/FieldMappingConfig"
           },
-          "type": "object"
+          "type": "object",
+          "description": "Properties of the field mapping object."
         },
         "type": {
           "type": "string",
@@ -84,7 +90,7 @@
         "properties",
         "type"
       ],
-      "description": "FieldMappingObjectConfig represents a config for object mapping."
+      "description": "FieldMappingObjectConfig represents configurations for the object field mapping."
     },
     "TemplateTransformerConfig": {
       "oneOf": [
