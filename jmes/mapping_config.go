@@ -129,9 +129,9 @@ func (fm *FieldMappingConfig) UnmarshalYAML(value *yaml.Node) error {
 // FieldMappingEntryConfig is the entry config to lookup field values with the specified JMES path.
 type FieldMappingEntryConfig struct {
 	// Path is a JMESPath expression to find a value in the input data.
-	Path *string `json:"path,omitempty" yaml:"path,omitempty"`
+	Path *string `json:"path,omitempty" yaml:"path,omitempty" jsonschema:"description=JMESPath expression to find a value in the input data"`
 	// Default value to be used when no value is found when looking up the value using the path.
-	Default *goenvconf.EnvAny `json:"default,omitempty" yaml:"default,omitempty"`
+	Default *goenvconf.EnvAny `json:"default,omitempty" yaml:"default,omitempty" jsonschema:"description=Default value to be used when no value is found"`
 }
 
 var _ FieldMappingConfigInterface = (*FieldMappingEntryConfig)(nil)
@@ -201,8 +201,9 @@ func (fm FieldMappingEntryConfig) EvaluateEntryEnv() (FieldMappingEntry, error) 
 	return fm.EvaluateEntry(goenvconf.GetOSEnv)
 }
 
-// FieldMappingObjectConfig represents a config for object mapping.
+// FieldMappingObjectConfig represents configurations for the object field mapping.
 type FieldMappingObjectConfig struct {
+	// Properties of the field mapping object.
 	Properties map[string]FieldMappingConfig `json:"properties" yaml:"properties"`
 }
 

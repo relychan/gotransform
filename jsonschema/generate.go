@@ -69,10 +69,12 @@ func jsonSchemaConfiguration() error {
 		Description: "Represents a generic field mapping config",
 		OneOf: []*jsonschema.Schema{
 			{
-				Ref: "#/$defs/FieldMappingObjectConfig",
+				Description: "Mapping configurations for object fields",
+				Ref:         "#/$defs/FieldMappingObjectConfig",
 			},
 			{
-				Ref: "#/$defs/FieldMappingEntryConfig",
+				Description: "The mapping configuration for an entry field",
+				Ref:         "#/$defs/FieldMappingEntryConfig",
 			},
 		},
 	}
