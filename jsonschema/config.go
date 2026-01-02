@@ -41,12 +41,14 @@ func (TemplateTransformerConfig) JSONSchema() *jsonschema.Schema {
 		OneOf: []*jsonschema.Schema{
 			{
 				Type:        "object",
+				Title:       "TemplateTransformerJMESPathConfig",
 				Description: "Transform responses using the standard JMESPath template",
 				Required:    []string{"type", "template"},
 				Properties:  jmesPathProps,
 			},
 			{
 				Type:        "object",
+				Title:       "TemplateTransformerGoTemplateConfig",
 				Description: "Transform responses using the standard Go template",
 				Properties:  goTemplateProps,
 				Required:    []string{"type", "template", "contentType"},

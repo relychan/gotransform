@@ -37,7 +37,7 @@
         },
         {
           "$ref": "#/$defs/FieldMappingEntryConfig",
-          "description": "The mapping configuration for an object field"
+          "description": "The mapping configuration for an entry field"
         }
       ],
       "description": "Represents a generic field mapping config"
@@ -46,11 +46,11 @@
       "properties": {
         "path": {
           "type": "string",
-          "description": "Path is a JMESPath expression to find a value in the input data."
+          "description": "JMESPath expression to find a value in the input data"
         },
         "default": {
           "$ref": "#/$defs/EnvAny",
-          "description": "Default value to be used when no value is found when looking up the value using the path."
+          "description": "Default value to be used when no value is found"
         },
         "type": {
           "type": "string",
@@ -113,6 +113,7 @@
             "type",
             "template"
           ],
+          "title": "TemplateTransformerJMESPathConfig",
           "description": "Transform responses using the standard JMESPath template"
         },
         {
@@ -139,6 +140,7 @@
             "template",
             "contentType"
           ],
+          "title": "TemplateTransformerGoTemplateConfig",
           "description": "Transform responses using the standard Go template"
         }
       ]
