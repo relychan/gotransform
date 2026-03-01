@@ -1,6 +1,6 @@
 module github.com/relychan/gotransform/jsonschema
 
-go 1.25.5
+go 1.26
 
 require (
 	github.com/invopop/jsonschema v0.13.0
@@ -22,14 +22,14 @@ require (
 	github.com/mailru/easyjson v0.9.1 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
-	github.com/relychan/goutils v0.0.0-20251230062103-93a30b1ea43d // indirect
+	github.com/relychan/goutils v0.0.0-20260227030433-84fbf4827e6b // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/spf13/cast v1.10.0 // indirect
 	github.com/stretchr/testify v1.11.1 // indirect
 	go.yaml.in/yaml/v4 v4.0.0-rc.3 // indirect
-	golang.org/x/crypto v0.46.0 // indirect
-	golang.org/x/exp v0.0.0-20251219203646-944ab1f22d93 // indirect
+	golang.org/x/crypto v0.48.0 // indirect
+	golang.org/x/exp v0.0.0-20260218203240-3dfff04db8fa // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
