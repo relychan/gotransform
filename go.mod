@@ -6,8 +6,8 @@ require (
 	github.com/Masterminds/sprig/v3 v3.3.0
 	github.com/hasura/goenvconf v0.6.1
 	github.com/jmespath-community/go-jmespath v1.1.2-0.20250228093220-ef5fae83c6c0
-	github.com/relychan/goutils v0.0.0-20260227030433-84fbf4827e6b
-	go.yaml.in/yaml/v4 v4.0.0-rc.3
+	github.com/relychan/goutils v0.0.0-20260301074023-2eb673a4894e
+	go.yaml.in/yaml/v4 v4.0.0-rc.4.0.20260301020847-9162c2211af3
 )
 
 require (
