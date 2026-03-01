@@ -42,7 +42,11 @@ func NewTransformerFromConfig(
 	case *gotmpl.GoTemplateTransformerConfig:
 		return gotmpl.NewGoTemplateTransformer(name, conf)
 	default:
-		return nil, fmt.Errorf("%w: %s", transformtypes.ErrUnsupportedTransformerType, config.Type())
+		return nil, fmt.Errorf(
+			"%w: %s",
+			transformtypes.ErrUnsupportedTransformerType,
+			config.Type(),
+		)
 	}
 }
 
