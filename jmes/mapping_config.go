@@ -98,22 +98,24 @@ func (fm *FieldMappingConfig) UnmarshalJSON(b []byte) error {
 
 // UnmarshalYAML implements the custom behavior for the yaml.Unmarshaler interface.
 func (fm *FieldMappingConfig) UnmarshalYAML(value *yaml.Node) error {
-	var temp rawFieldMappingConfig
-
-	err := value.Decode(&temp)
+	rawConfigType, err := goutils.GetStringValueFromYAMLMap(value, "type")
 	if err != nil {
 		return err
 	}
 
+	if rawConfigType == nil {
+		return ErrFieldMappingTypeRequired
+	}
+
 	var config FieldMappingConfigInterface
 
-	switch temp.Type {
+	switch FieldMappingType(*rawConfigType) {
 	case FieldMappingTypeObject:
 		config = new(FieldMappingObjectConfig)
 	case FieldMappingTypeField:
 		config = new(FieldMappingEntryConfig)
 	default:
-		return fmt.Errorf("%w: %s", ErrUnsupportedFieldMappingType, temp.Type)
+		return fmt.Errorf("%w: %s", ErrUnsupportedFieldMappingType, *rawConfigType)
 	}
 
 	err = value.Decode(config)

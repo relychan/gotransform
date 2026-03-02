@@ -18,6 +18,7 @@ const (
 )
 
 var (
+	ErrFieldMappingTypeRequired    = errors.New("field mapping type is required")
 	ErrUnsupportedFieldMappingType = errors.New("unsupported field mapping type")
 	ErrFieldMappingEntryMalformed  = errors.New("field mapping entry is malformed")
 	ErrFieldMappingEntryRequired   = errors.New("field mapping entry must not be empty")
