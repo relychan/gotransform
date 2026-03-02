@@ -2,6 +2,7 @@ package gotransform
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"github.com/relychan/gotransform/gotmpl"
@@ -10,6 +11,8 @@ import (
 	"github.com/relychan/goutils"
 	"go.yaml.in/yaml/v4"
 )
+
+var errConfigTypeRequired = errors.New("transformer config type is rqeuired")
 
 // TemplateTransformerConfig represents configurations for transforming data.
 type TemplateTransformerConfig struct {
@@ -81,22 +84,24 @@ func (j *TemplateTransformerConfig) UnmarshalJSON(b []byte) error {
 
 // UnmarshalYAML implements the custom behavior for the yaml.Unmarshaler interface.
 func (j *TemplateTransformerConfig) UnmarshalYAML(value *yaml.Node) error {
-	var temp rawTemplateTransformerConfig
-
-	err := value.Decode(&temp)
+	rawConfigType, err := goutils.GetStringValueFromYAMLMap(value, "type")
 	if err != nil {
 		return err
 	}
 
+	if rawConfigType == nil {
+		return errConfigTypeRequired
+	}
+
 	var config transformtypes.TemplateTransformerConfig
 
-	switch temp.Type {
+	switch transformtypes.TransformTemplateType(*rawConfigType) {
 	case transformtypes.TransformTemplateGo:
 		config = new(gotmpl.GoTemplateTransformerConfig)
 	case transformtypes.TransformTemplateJMESPath:
 		config = new(jmes.JMESTransformerConfig)
 	default:
-		return fmt.Errorf("%w: %s", transformtypes.ErrUnsupportedTransformerType, temp.Type)
+		return fmt.Errorf("%w: %s", transformtypes.ErrUnsupportedTransformerType, *rawConfigType)
 	}
 
 	err = value.Decode(config)

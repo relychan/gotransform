@@ -32,6 +32,8 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/relychan/goutils v0.0.0-20260301074023-2eb673a4894e h1:gSp+Mc+MtjbvsWOZZstrplo1RaHO35Cso/jgRbCy94c=
 github.com/relychan/goutils v0.0.0-20260301074023-2eb673a4894e/go.mod h1:i9/x+EVb7KARsLykxKAF8f+gC8/NdGRa7JU+CG9tRlw=
+github.com/relychan/goutils v0.0.0-20260302082857-81daa3c6a49a h1:8e1G6v0sS3sQHqOQMz5U7nSzFaAsVHUPLWb0OVjkNc0=
+github.com/relychan/goutils v0.0.0-20260302082857-81daa3c6a49a/go.mod h1:i9/x+EVb7KARsLykxKAF8f+gC8/NdGRa7JU+CG9tRlw=
 github.com/rogpeppe/go-internal v1.9.0 h1:73kH8U+JUqXU8lRuOHeVHaa/SZPifC7BkcraZVejAe8=
 github.com/rogpeppe/go-internal v1.9.0/go.mod h1:WtVeX8xhTBvf0smdhujwtBcq4Qrzq/fJaraNFVN+nFs=
 github.com/shopspring/decimal v1.4.0 h1:bxl37RwXBklmTi0C79JfXCEBD1cqqHt0bbgBAGFp81k=
