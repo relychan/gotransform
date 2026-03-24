@@ -15,10 +15,10 @@
 package main
 
 import (
-	"github.com/invopop/jsonschema"
+	orderedmap "github.com/pb33f/ordered-map/v2"
 	"github.com/relychan/gotransform"
 	"github.com/relychan/gotransform/transformtypes"
-	orderedmap "github.com/wk8/go-ordered-map/v2"
+	"github.com/relychan/jsonschema"
 )
 
 type TemplateTransformerConfig gotransform.TemplateTransformerConfig

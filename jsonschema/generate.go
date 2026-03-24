@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/invopop/jsonschema"
 	"github.com/relychan/gotransform/jmes"
+	"github.com/relychan/jsonschema"
 )
 
 func main() {
