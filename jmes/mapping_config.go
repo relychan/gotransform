@@ -132,7 +132,7 @@ func (fm *FieldMappingConfig) UnmarshalYAML(value *yaml.Node) error {
 		return fmt.Errorf("%w: %s", ErrUnsupportedFieldMappingType, *rawConfigType)
 	}
 
-	err = value.Decode(config)
+	err = value.Load(config)
 	if err != nil {
 		return err
 	}

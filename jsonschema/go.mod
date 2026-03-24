@@ -3,9 +3,9 @@ module github.com/relychan/gotransform/jsonschema
 go 1.26
 
 require (
-	github.com/invopop/jsonschema v0.13.0
+	github.com/pb33f/ordered-map/v2 v2.3.0
 	github.com/relychan/gotransform v0.0.0-00010101000000-000000000000
-	github.com/wk8/go-ordered-map/v2 v2.1.8
+	github.com/relychan/jsonschema v0.13.1
 )
 
 require (
@@ -14,24 +14,20 @@ require (
 	github.com/Masterminds/semver/v3 v3.4.0 // indirect
 	github.com/Masterminds/sprig/v3 v3.3.0 // indirect
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
-	github.com/buger/jsonparser v1.1.1 // indirect
+	github.com/buger/jsonparser v1.1.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/hasura/goenvconf v0.6.2 // indirect
 	github.com/huandu/xstrings v1.5.0 // indirect
 	github.com/jmespath-community/go-jmespath v1.1.2-0.20250228093220-ef5fae83c6c0 // indirect
-	github.com/mailru/easyjson v0.9.1 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
-	github.com/relychan/goutils v0.0.0-20260314112334-2ca76d8ee0f6 // indirect
+	github.com/relychan/goutils v0.0.0-20260320085159-a456d46cc0d9 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/spf13/cast v1.10.0 // indirect
-	github.com/stretchr/testify v1.11.1 // indirect
-	go.yaml.in/yaml/v4 v4.0.0-rc.4.0.20260301223609-d604f65988bf // indirect
+	go.yaml.in/yaml/v4 v4.0.0-rc.4.0.20260316011301-aadd5c28b882 // indirect
 	golang.org/x/crypto v0.49.0 // indirect
 	golang.org/x/exp v0.0.0-20260312153236-7ab1446f8b90 // indirect
-	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
 replace github.com/relychan/gotransform => ../

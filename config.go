@@ -26,7 +26,7 @@ import (
 	"go.yaml.in/yaml/v4"
 )
 
-var errConfigTypeRequired = errors.New("transformer config type is rqeuired")
+var errConfigTypeRequired = errors.New("transformer config type is required")
 
 // TemplateTransformerConfig represents configurations for transforming data.
 type TemplateTransformerConfig struct {
@@ -118,7 +118,7 @@ func (j *TemplateTransformerConfig) UnmarshalYAML(value *yaml.Node) error {
 		return fmt.Errorf("%w: %s", transformtypes.ErrUnsupportedTransformerType, *rawConfigType)
 	}
 
-	err = value.Decode(config)
+	err = value.Load(config)
 	if err != nil {
 		return err
 	}
