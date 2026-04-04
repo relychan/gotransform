@@ -160,7 +160,7 @@ func (FieldMappingEntryConfig) Type() FieldMappingType {
 
 // IsZero checks if the config is empty.
 func (fm FieldMappingEntryConfig) IsZero() bool {
-	return fm.Path == nil && fm.Default == nil
+	return fm.Path == nil && *fm.Path == "" && fm.Default == nil
 }
 
 // Equal checks if this instance equals the target value.
@@ -296,7 +296,7 @@ func (FieldMappingEntryStringConfig) Type() FieldMappingType {
 
 // IsZero checks if the config is empty.
 func (fm FieldMappingEntryStringConfig) IsZero() bool {
-	return fm.Path == nil && fm.Default == nil
+	return fm.Path == nil && *fm.Path == "" && fm.Default == nil
 }
 
 // Equal checks if this instance equals the target value.
