@@ -87,7 +87,16 @@ func TestFieldMappingEntryConfig_EvaluateEntry(t *testing.T) {
 		}
 
 		if entry.Path == nil {
-			t.Errorf("expected path to be 'name', got: %v", entry.Path)
+			t.Fatal("expected compiled path, got nil")
+		}
+
+		result, err := entry.Path.Search(map[string]any{"name": "x"})
+		if err != nil {
+			t.Fatalf("expected compiled path to evaluate without error, got: %v", err)
+		}
+
+		if result != "x" {
+			t.Errorf("expected compiled path to return 'x', got: %v", result)
 		}
 	})
 
@@ -277,7 +286,18 @@ func TestFieldMappingEntryStringConfig_EvaluateString(t *testing.T) {
 		}
 
 		if entry.Path == nil {
-			t.Errorf("expected path to be 'name', got: %v", entry.Path)
+			t.Fatalf("expected path to be compiled for %q, got: %v", path, entry.Path)
+		}
+
+		result, err := entry.Path.Search(map[string]any{
+			"name": "alice",
+		})
+		if err != nil {
+			t.Fatalf("expected compiled path search to succeed, got: %v", err)
+		}
+
+		if result != "alice" {
+			t.Errorf("expected compiled path to select %q, got: %v", "alice", result)
 		}
 	})
 
