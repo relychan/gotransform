@@ -22,8 +22,8 @@ import (
 
 // GoTemplateTransformerConfig represents configurations for the Go template transformer.
 type GoTemplateTransformerConfig struct {
-	ContentType string `json:"contentType" jsonschema:"default=application/json" yaml:"contentType"`
-	Template    string `json:"template"    yaml:"template"`
+	ContentType string `json:"contentType,omitempty" yaml:"contentType,omitempty"`
+	Template    string `json:"template" yaml:"template"`
 }
 
 var _ transformtypes.TemplateTransformerConfig = (*GoTemplateTransformerConfig)(nil)
@@ -45,30 +45,30 @@ func (gt GoTemplateTransformerConfig) Equal(target GoTemplateTransformerConfig) 
 }
 
 // Validate checks if the config is valid.
-func (gt GoTemplateTransformerConfig) Validate() error {
-	if gt.Template == "" {
-		return transformtypes.ErrTemplateContentRequired
-	}
-
+func (GoTemplateTransformerConfig) Validate() error {
 	return nil
 }
 
 // MarshalJSON implements the json.Marshaler interface.
 func (gt GoTemplateTransformerConfig) MarshalJSON() ([]byte, error) {
+	return json.Marshal(gt.toMap())
+}
+
+// MarshalYAML implements the yaml.Marshaler interface.
+func (gt GoTemplateTransformerConfig) MarshalYAML() (any, error) {
+	return gt.toMap(), nil
+}
+
+func (gt GoTemplateTransformerConfig) toMap() map[string]any {
 	result := map[string]any{
 		"type":        gt.Type(),
 		"contentType": gt.ContentType,
 		"template":    gt.Template,
 	}
 
-	return json.Marshal(result)
-}
+	if gt.ContentType != "" {
+		result["contentType"] = gt.ContentType
+	}
 
-// MarshalYAML implements the yaml.Marshaler interface.
-func (gt GoTemplateTransformerConfig) MarshalYAML() (any, error) {
-	return map[string]any{
-		"type":        gt.Type(),
-		"contentType": gt.ContentType,
-		"template":    gt.Template,
-	}, nil
+	return result
 }
