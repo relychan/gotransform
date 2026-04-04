@@ -45,7 +45,11 @@ func (gt GoTemplateTransformerConfig) Equal(target GoTemplateTransformerConfig) 
 }
 
 // Validate checks if the config is valid.
-func (GoTemplateTransformerConfig) Validate() error {
+func (gt GoTemplateTransformerConfig) Validate() error {
+	if gt.Template == "" {
+		return transformtypes.ErrTemplateContentRequired
+	}
+
 	return nil
 }
 
