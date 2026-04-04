@@ -65,9 +65,8 @@ func (gt GoTemplateTransformerConfig) MarshalYAML() (any, error) {
 
 func (gt GoTemplateTransformerConfig) toMap() map[string]any {
 	result := map[string]any{
-		"type":        gt.Type(),
-		"contentType": gt.ContentType,
-		"template":    gt.Template,
+		"type":     gt.Type(),
+		"template": gt.Template,
 	}
 
 	if gt.ContentType != "" {
