@@ -19,6 +19,7 @@ import (
 	"fmt"
 
 	"github.com/hasura/goenvconf"
+	"github.com/jmespath-community/go-jmespath"
 	"github.com/relychan/goutils"
 	"go.yaml.in/yaml/v4"
 )
@@ -145,9 +146,9 @@ func (fm *FieldMappingConfig) UnmarshalYAML(value *yaml.Node) error {
 // FieldMappingEntryConfig is the entry config to lookup field values with the specified JMES path.
 type FieldMappingEntryConfig struct {
 	// Path is a JMESPath expression to find a value in the input data.
-	Path *string `json:"path,omitempty" yaml:"path,omitempty" jsonschema:"description=JMESPath expression to find a value in the input data"`
+	Path *string `json:"path,omitempty" yaml:"path,omitempty"`
 	// Default value to be used when no value is found when looking up the value using the path.
-	Default *goenvconf.EnvAny `json:"default,omitempty" yaml:"default,omitempty" jsonschema:"description=Default value to be used when no value is found"`
+	Default *goenvconf.EnvAny `json:"default,omitempty" yaml:"default,omitempty"`
 }
 
 var _ FieldMappingConfigInterface = (*FieldMappingEntryConfig)(nil)
@@ -196,8 +197,15 @@ func (fm FieldMappingEntryConfig) EvaluateEntry(
 		return FieldMappingEntry{}, ErrFieldMappingEntryRequired
 	}
 
-	result := FieldMappingEntry{
-		Path: fm.Path,
+	result := FieldMappingEntry{}
+
+	if fm.Path != nil && *fm.Path != "" {
+		jPath, err := jmespath.Compile(*fm.Path)
+		if err != nil {
+			return FieldMappingEntry{}, err
+		}
+
+		result.Path = jPath
 	}
 
 	if fm.Default != nil {
@@ -322,8 +330,15 @@ func (fm FieldMappingEntryStringConfig) EvaluateString(
 		return FieldMappingEntryString{}, ErrFieldMappingEntryRequired
 	}
 
-	result := FieldMappingEntryString{
-		Path: fm.Path,
+	result := FieldMappingEntryString{}
+
+	if fm.Path != nil && *fm.Path != "" {
+		jPath, err := jmespath.Compile(*fm.Path)
+		if err != nil {
+			return FieldMappingEntryString{}, err
+		}
+
+		result.Path = jPath
 	}
 
 	if fm.Default != nil {

@@ -67,36 +67,10 @@ func (fm FieldMapping) IsZero() bool {
 	return fm.FieldMappingInterface == nil || fm.FieldMappingInterface.IsZero()
 }
 
-// Equal checks if this instance equals the target value.
-func (fm FieldMapping) Equal(target FieldMapping) bool {
-	if fm.FieldMappingInterface == target.FieldMappingInterface {
-		return true
-	}
-
-	if fm.FieldMappingInterface == nil || target.FieldMappingInterface == nil {
-		return false
-	}
-
-	if fm.Type() != target.Type() {
-		return false
-	}
-
-	switch fmi := fm.FieldMappingInterface.(type) {
-	case *FieldMappingEntry:
-		return goutils.DeepEqual(fmi, target.FieldMappingInterface, true)
-	case *FieldMappingEntryString:
-		return goutils.DeepEqual(fmi, target.FieldMappingInterface, true)
-	case *FieldMappingObject:
-		return goutils.DeepEqual(fmi, target.FieldMappingInterface, true)
-	default:
-		return false
-	}
-}
-
 // FieldMappingEntry is the entry to lookup field values with the specified JMES path.
 type FieldMappingEntry struct {
 	// Path is a JMESPath expression to find a value in the input data.
-	Path *string
+	Path jmespath.JMESPath
 	// Default value to be used when no value is found when looking up the value using the path.
 	Default any
 }
@@ -110,27 +84,17 @@ func (FieldMappingEntry) Type() FieldMappingType {
 
 // IsZero checks if the field mapping entry is empty (zero-valued).
 func (fm FieldMappingEntry) IsZero() bool {
-	return (fm.Path == nil || *fm.Path == "") && fm.Default == nil
-}
-
-// Equal checks if this instance equals the target value.
-func (fm FieldMappingEntry) Equal(target FieldMappingEntry) bool {
-	return goutils.EqualComparablePtr(fm.Path, target.Path) &&
-		goutils.DeepEqual(fm.Default, target.Default, false)
+	return fm.Path == nil && fm.Default == nil
 }
 
 // Evaluate validates and transforms data with the specified JMES path.
 func (fm FieldMappingEntry) Evaluate(data any) (any, error) {
 	if fm.Path != nil {
-		result := data
+		var err error
 
-		if *fm.Path != "" {
-			var err error
-
-			result, err = jmespath.Search(*fm.Path, data)
-			if err != nil {
-				return nil, fmt.Errorf("failed to evaluate mapping entry: %w", err)
-			}
+		result, err := fm.Path.Search(data)
+		if err != nil {
+			return nil, fmt.Errorf("failed to evaluate mapping entry: %w", err)
 		}
 
 		if result != nil {
@@ -186,7 +150,7 @@ func (fm FieldMappingObject) Evaluate(data any) (any, error) {
 // FieldMappingEntryString is the entry to lookup string values with the specified JMES path.
 type FieldMappingEntryString struct {
 	// Path is a JMESPath expression to find a value in the input data.
-	Path *string
+	Path jmespath.JMESPath
 	// Default value to be used when no value is found when looking up the value using the path.
 	Default *string
 }
@@ -200,13 +164,7 @@ func (FieldMappingEntryString) Type() FieldMappingType {
 
 // IsZero checks if the field mapping entry string is empty or zero-valued.
 func (fm FieldMappingEntryString) IsZero() bool {
-	return (fm.Path == nil || *fm.Path == "") && fm.Default == nil
-}
-
-// Equal checks if this instance equals the target value.
-func (fm FieldMappingEntryString) Equal(target FieldMappingEntryString) bool {
-	return goutils.EqualComparablePtr(fm.Path, target.Path) &&
-		goutils.EqualComparablePtr(fm.Default, target.Default)
+	return fm.Path == nil && fm.Default == nil
 }
 
 // Evaluate validates and transforms data with the specified JMES path, returning any value.
@@ -237,10 +195,10 @@ func (fm FieldMappingEntryString) EvaluateString(data any) (*string, error) {
 func (fm FieldMappingEntryString) evaluateStringFromPath(data any) (*string, error) {
 	var result any
 
-	if *fm.Path != "" {
+	if fm.Path != nil {
 		var err error
 
-		result, err = jmespath.Search(*fm.Path, data)
+		result, err = fm.Path.Search(data)
 		if err != nil {
 			return nil, fmt.Errorf("failed to evaluate mapping entry string: %w", err)
 		}

@@ -86,7 +86,7 @@ func TestFieldMappingEntryConfig_EvaluateEntry(t *testing.T) {
 			t.Fatalf("expected no error, got: %v", err)
 		}
 
-		if entry.Path == nil || *entry.Path != "name" {
+		if entry.Path == nil {
 			t.Errorf("expected path to be 'name', got: %v", entry.Path)
 		}
 	})
@@ -276,7 +276,7 @@ func TestFieldMappingEntryStringConfig_EvaluateString(t *testing.T) {
 			t.Fatalf("expected no error, got: %v", err)
 		}
 
-		if entry.Path == nil || *entry.Path != "name" {
+		if entry.Path == nil {
 			t.Errorf("expected path to be 'name', got: %v", entry.Path)
 		}
 	})

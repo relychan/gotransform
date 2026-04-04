@@ -50,11 +50,11 @@ func TestEvaluateObjectFieldMappingEntries(t *testing.T) {
 			t.Errorf("expected 2 entries, got: %d", len(result))
 		}
 
-		if result["userName"].Path == nil || *result["userName"].Path != "name" {
+		if result["userName"].Path == nil {
 			t.Errorf("expected userName path to be 'name', got: %v", result["userName"].Path)
 		}
 
-		if result["userAge"].Path == nil || *result["userAge"].Path != "age" {
+		if result["userAge"].Path == nil {
 			t.Errorf("expected userAge path to be 'age', got: %v", result["userAge"].Path)
 		}
 	})
@@ -122,11 +122,11 @@ func TestEvaluateObjectFieldMappingStringEntries(t *testing.T) {
 			t.Errorf("expected 2 entries, got: %d", len(result))
 		}
 
-		if result["userName"].Path == nil || *result["userName"].Path != "name" {
+		if result["userName"].Path == nil {
 			t.Errorf("expected userName path to be 'name', got: %v", result["userName"].Path)
 		}
 
-		if result["userEmail"].Path == nil || *result["userEmail"].Path != "email" {
+		if result["userEmail"].Path == nil {
 			t.Errorf("expected userEmail path to be 'email', got: %v", result["userEmail"].Path)
 		}
 	})

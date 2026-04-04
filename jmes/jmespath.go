@@ -43,8 +43,3 @@ func (jtt JMESTemplateTransformer) IsZero() bool {
 func (jtt JMESTemplateTransformer) Transform(data any) (any, error) {
 	return jtt.template.Evaluate(data)
 }
-
-// Equal checks if this instance equals the target value.
-func (jtt JMESTemplateTransformer) Equal(target JMESTemplateTransformer) bool {
-	return jtt.template.Equal(target.template)
-}
