@@ -26,6 +26,7 @@ import (
 
 	"github.com/Masterminds/sprig/v3"
 	"github.com/relychan/gotransform/transformtypes"
+	"github.com/relychan/goutils/httpheader"
 )
 
 const contentTypeHTML = "text/html"
@@ -46,13 +47,15 @@ func NewGoTemplateTransformer(
 	name string,
 	config *GoTemplateTransformerConfig,
 ) (*GoTemplateTransformer, error) {
+	contentType, _, _ := strings.Cut(config.ContentType, ",")
+
 	result := &GoTemplateTransformer{
-		contentType: config.ContentType,
+		contentType: strings.TrimSpace(contentType),
 	}
 
 	var err error
 
-	if strings.HasPrefix(config.ContentType, contentTypeHTML) {
+	if config.ContentType == contentTypeHTML {
 		result.template, err = htmltemplate.New(name).Funcs(sprig.FuncMap()).Parse(config.Template)
 	} else {
 		result.template, err = template.New(name).Funcs(sprig.FuncMap()).Parse(config.Template)
@@ -91,7 +94,7 @@ func (gtt GoTemplateTransformer) Transform(data any) (any, error) {
 	}
 
 	switch gtt.contentType {
-	case "application/json":
+	case httpheader.ContentTypeJSON:
 		var result any
 
 		err := json.Unmarshal(buffer.Bytes(), &result)

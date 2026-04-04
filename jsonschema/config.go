@@ -65,7 +65,7 @@ func (TemplateTransformerConfig) JSONSchema() *jsonschema.Schema {
 				Title:       "TemplateTransformerGoTemplateConfig",
 				Description: "Transform responses using the standard Go template",
 				Properties:  goTemplateProps,
-				Required:    []string{"type", "template", "contentType"},
+				Required:    []string{"type", "template"},
 			},
 		},
 	}

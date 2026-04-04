@@ -21,7 +21,7 @@ import (
 func TestNewGoTemplateTransformer(t *testing.T) {
 	t.Run("success with text template", func(t *testing.T) {
 		config := &GoTemplateTransformerConfig{
-			ContentType: "application/json",
+			ContentType: "application/json, utf-8",
 			Template:    `{"message": "{{.name}}"}`,
 		}
 

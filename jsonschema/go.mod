@@ -3,8 +3,8 @@ module github.com/relychan/gotransform/jsonschema
 go 1.26
 
 require (
-	github.com/pb33f/ordered-map/v2 v2.3.0
-	github.com/relychan/gotransform v0.0.0-00010101000000-000000000000
+	github.com/pb33f/ordered-map/v2 v2.3.1
+	github.com/relychan/gotransform v0.0.0-20260324093131-a79b1f2fda47
 	github.com/relychan/jsonschema v0.13.1
 )
 
@@ -16,7 +16,7 @@ require (
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/buger/jsonparser v1.1.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/hasura/goenvconf v0.6.2 // indirect
+	github.com/hasura/goenvconf v0.7.0 // indirect
 	github.com/huandu/xstrings v1.5.0 // indirect
 	github.com/jmespath-community/go-jmespath v1.1.2-0.20250228093220-ef5fae83c6c0 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
