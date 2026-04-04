@@ -22,7 +22,7 @@ func jsonSchemaConfiguration() error {
 
 	err := r.AddGoComments(
 		"github.com/relychan/gotransform",
-		"../gotransform",
+		"../",
 		jsonschema.WithFullComment(),
 	)
 	if err != nil {

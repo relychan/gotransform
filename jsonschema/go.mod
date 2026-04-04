@@ -21,7 +21,7 @@ require (
 	github.com/jmespath-community/go-jmespath v1.1.2-0.20250228093220-ef5fae83c6c0 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
-	github.com/relychan/goutils v0.0.0-20260320085159-a456d46cc0d9 // indirect
+	github.com/relychan/goutils v0.0.0-20260404183650-6657ea84ff81 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/spf13/cast v1.10.0 // indirect

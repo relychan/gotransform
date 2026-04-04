@@ -17,6 +17,7 @@ package jmes
 import (
 	"testing"
 
+	"github.com/jmespath-community/go-jmespath"
 	"github.com/relychan/goutils"
 )
 
@@ -36,18 +37,10 @@ func TestFieldMappingEntry_IsZero(t *testing.T) {
 	})
 
 	t.Run("with path", func(t *testing.T) {
-		path := "data.name"
-		entry := FieldMappingEntry{Path: &path}
+		path := jmespath.MustCompile("data.name")
+		entry := FieldMappingEntry{Path: path}
 		if entry.IsZero() {
 			t.Error("expected IsZero to return false when path is set")
-		}
-	})
-
-	t.Run("with empty path", func(t *testing.T) {
-		path := ""
-		entry := FieldMappingEntry{Path: &path}
-		if !entry.IsZero() {
-			t.Error("expected IsZero to return true when path is empty")
 		}
 	})
 
@@ -59,40 +52,10 @@ func TestFieldMappingEntry_IsZero(t *testing.T) {
 	})
 }
 
-func TestFieldMappingEntry_Equal(t *testing.T) {
-	t.Run("equal entries", func(t *testing.T) {
-		path := "data.name"
-		entry1 := FieldMappingEntry{Path: &path, Default: "test"}
-		entry2 := FieldMappingEntry{Path: &path, Default: "test"}
-		if !entry1.Equal(entry2) {
-			t.Error("expected entries to be equal")
-		}
-	})
-
-	t.Run("different paths", func(t *testing.T) {
-		path1 := "data.name"
-		path2 := "data.title"
-		entry1 := FieldMappingEntry{Path: &path1}
-		entry2 := FieldMappingEntry{Path: &path2}
-		if entry1.Equal(entry2) {
-			t.Error("expected entries to be different")
-		}
-	})
-
-	t.Run("different defaults", func(t *testing.T) {
-		path := "data.name"
-		entry1 := FieldMappingEntry{Path: &path, Default: "test1"}
-		entry2 := FieldMappingEntry{Path: &path, Default: "test2"}
-		if entry1.Equal(entry2) {
-			t.Error("expected entries to be different")
-		}
-	})
-}
-
 func TestFieldMappingEntry_Evaluate(t *testing.T) {
 	t.Run("evaluate with path", func(t *testing.T) {
-		path := "name"
-		entry := FieldMappingEntry{Path: &path}
+		path := jmespath.MustCompile("name")
+		entry := FieldMappingEntry{Path: path}
 		data := map[string]any{"name": "John"}
 
 		result, err := entry.Evaluate(data)
@@ -105,24 +68,9 @@ func TestFieldMappingEntry_Evaluate(t *testing.T) {
 		}
 	})
 
-	t.Run("evaluate with empty path", func(t *testing.T) {
-		path := ""
-		entry := FieldMappingEntry{Path: &path}
-		data := map[string]any{"name": "John"}
-
-		result, err := entry.Evaluate(data)
-		if err != nil {
-			t.Fatalf("expected no error, got: %v", err)
-		}
-
-		if !goutils.DeepEqual(result, data, false) {
-			t.Errorf("expected result to be the input data, got: %v", result)
-		}
-	})
-
 	t.Run("evaluate with nested path", func(t *testing.T) {
-		path := "user.name"
-		entry := FieldMappingEntry{Path: &path}
+		path := jmespath.MustCompile("user.name")
+		entry := FieldMappingEntry{Path: path}
 		data := map[string]any{
 			"user": map[string]any{
 				"name": "Jane",
@@ -140,8 +88,8 @@ func TestFieldMappingEntry_Evaluate(t *testing.T) {
 	})
 
 	t.Run("evaluate with array path", func(t *testing.T) {
-		path := "users[*].name"
-		entry := FieldMappingEntry{Path: &path}
+		path := jmespath.MustCompile("users[*].name")
+		entry := FieldMappingEntry{Path: path}
 		data := map[string]any{
 			"users": []map[string]any{
 				{"name": "Alice"},
@@ -161,8 +109,8 @@ func TestFieldMappingEntry_Evaluate(t *testing.T) {
 	})
 
 	t.Run("evaluate with default when path not found", func(t *testing.T) {
-		path := "nonexistent"
-		entry := FieldMappingEntry{Path: &path, Default: "default_value"}
+		path := jmespath.MustCompile("nonexistent")
+		entry := FieldMappingEntry{Path: path, Default: "default_value"}
 		data := map[string]any{"name": "John"}
 
 		result, err := entry.Evaluate(data)
@@ -188,17 +136,6 @@ func TestFieldMappingEntry_Evaluate(t *testing.T) {
 			t.Errorf("expected result to be 'default_value', got: %v", result)
 		}
 	})
-
-	t.Run("error with invalid path", func(t *testing.T) {
-		path := "invalid[["
-		entry := FieldMappingEntry{Path: &path}
-		data := map[string]any{"name": "John"}
-
-		_, err := entry.Evaluate(data)
-		if err == nil {
-			t.Fatal("expected error for invalid path, got nil")
-		}
-	})
 }
 
 func TestFieldMappingObject_Type(t *testing.T) {
@@ -217,10 +154,10 @@ func TestFieldMappingObject_IsZero(t *testing.T) {
 	})
 
 	t.Run("with properties", func(t *testing.T) {
-		path := "name"
+		path := jmespath.MustCompile("name")
 		obj := FieldMappingObject{
 			Properties: map[string]FieldMapping{
-				"field": NewFieldMapping(&FieldMappingEntry{Path: &path}),
+				"field": NewFieldMapping(&FieldMappingEntry{Path: path}),
 			},
 		}
 		if obj.IsZero() {
@@ -231,15 +168,15 @@ func TestFieldMappingObject_IsZero(t *testing.T) {
 
 func TestFieldMappingObject_Equal(t *testing.T) {
 	t.Run("equal objects", func(t *testing.T) {
-		path := "name"
+		path := jmespath.MustCompile("name")
 		obj1 := FieldMappingObject{
 			Properties: map[string]FieldMapping{
-				"field": NewFieldMapping(&FieldMappingEntry{Path: &path}),
+				"field": NewFieldMapping(&FieldMappingEntry{Path: path}),
 			},
 		}
 		obj2 := FieldMappingObject{
 			Properties: map[string]FieldMapping{
-				"field": NewFieldMapping(&FieldMappingEntry{Path: &path}),
+				"field": NewFieldMapping(&FieldMappingEntry{Path: path}),
 			},
 		}
 		if !obj1.Equal(obj2) {
@@ -248,16 +185,16 @@ func TestFieldMappingObject_Equal(t *testing.T) {
 	})
 
 	t.Run("different properties", func(t *testing.T) {
-		path1 := "name"
-		path2 := "title"
+		path1 := jmespath.MustCompile("name")
+		path2 := jmespath.MustCompile("title")
 		obj1 := FieldMappingObject{
 			Properties: map[string]FieldMapping{
-				"field": NewFieldMapping(&FieldMappingEntry{Path: &path1}),
+				"field": NewFieldMapping(&FieldMappingEntry{Path: path1}),
 			},
 		}
 		obj2 := FieldMappingObject{
 			Properties: map[string]FieldMapping{
-				"field": NewFieldMapping(&FieldMappingEntry{Path: &path2}),
+				"field": NewFieldMapping(&FieldMappingEntry{Path: path2}),
 			},
 		}
 		if obj1.Equal(obj2) {
@@ -268,12 +205,12 @@ func TestFieldMappingObject_Equal(t *testing.T) {
 
 func TestFieldMappingObject_Evaluate(t *testing.T) {
 	t.Run("evaluate simple object", func(t *testing.T) {
-		namePath := "name"
-		agePath := "age"
+		namePath := jmespath.MustCompile("name")
+		agePath := jmespath.MustCompile("age")
 		obj := FieldMappingObject{
 			Properties: map[string]FieldMapping{
-				"userName": NewFieldMapping(&FieldMappingEntry{Path: &namePath}),
-				"userAge":  NewFieldMapping(&FieldMappingEntry{Path: &agePath}),
+				"userName": NewFieldMapping(&FieldMappingEntry{Path: namePath}),
+				"userAge":  NewFieldMapping(&FieldMappingEntry{Path: agePath}),
 			},
 		}
 		data := map[string]any{
@@ -301,12 +238,12 @@ func TestFieldMappingObject_Evaluate(t *testing.T) {
 	})
 
 	t.Run("evaluate nested object", func(t *testing.T) {
-		userNamePath := "user.name"
-		userEmailPath := "user.email"
+		userNamePath := jmespath.MustCompile("user.name")
+		userEmailPath := jmespath.MustCompile("user.email")
 		innerObj := FieldMappingObject{
 			Properties: map[string]FieldMapping{
-				"name":  NewFieldMapping(&FieldMappingEntry{Path: &userNamePath}),
-				"email": NewFieldMapping(&FieldMappingEntry{Path: &userEmailPath}),
+				"name":  NewFieldMapping(&FieldMappingEntry{Path: userNamePath}),
+				"email": NewFieldMapping(&FieldMappingEntry{Path: userEmailPath}),
 			},
 		}
 
@@ -371,8 +308,8 @@ func TestFieldMappingEntryString_IsZero(t *testing.T) {
 	})
 
 	t.Run("with path", func(t *testing.T) {
-		path := "data.name"
-		entry := FieldMappingEntryString{Path: &path}
+		path := jmespath.MustCompile("data.name")
+		entry := FieldMappingEntryString{Path: path}
 		if entry.IsZero() {
 			t.Error("expected IsZero to return false when path is set")
 		}
@@ -387,32 +324,10 @@ func TestFieldMappingEntryString_IsZero(t *testing.T) {
 	})
 }
 
-func TestFieldMappingEntryString_Equal(t *testing.T) {
-	t.Run("equal entries", func(t *testing.T) {
-		path := "data.name"
-		defaultVal := "test"
-		entry1 := FieldMappingEntryString{Path: &path, Default: &defaultVal}
-		entry2 := FieldMappingEntryString{Path: &path, Default: &defaultVal}
-		if !entry1.Equal(entry2) {
-			t.Error("expected entries to be equal")
-		}
-	})
-
-	t.Run("different paths", func(t *testing.T) {
-		path1 := "data.name"
-		path2 := "data.title"
-		entry1 := FieldMappingEntryString{Path: &path1}
-		entry2 := FieldMappingEntryString{Path: &path2}
-		if entry1.Equal(entry2) {
-			t.Error("expected entries to be different")
-		}
-	})
-}
-
 func TestFieldMappingEntryString_EvaluateString(t *testing.T) {
 	t.Run("evaluate with path", func(t *testing.T) {
-		path := "name"
-		entry := FieldMappingEntryString{Path: &path}
+		path := jmespath.MustCompile("name")
+		entry := FieldMappingEntryString{Path: path}
 		data := map[string]any{"name": "John"}
 
 		result, err := entry.EvaluateString(data)
@@ -426,9 +341,9 @@ func TestFieldMappingEntryString_EvaluateString(t *testing.T) {
 	})
 
 	t.Run("evaluate with default", func(t *testing.T) {
-		path := "nonexistent"
+		path := jmespath.MustCompile("nonexistent")
 		defaultVal := "default"
-		entry := FieldMappingEntryString{Path: &path, Default: &defaultVal}
+		entry := FieldMappingEntryString{Path: path, Default: &defaultVal}
 		data := map[string]any{"name": "John"}
 
 		result, err := entry.EvaluateString(data)
@@ -442,8 +357,8 @@ func TestFieldMappingEntryString_EvaluateString(t *testing.T) {
 	})
 
 	t.Run("error with non-string value", func(t *testing.T) {
-		path := "age"
-		entry := FieldMappingEntryString{Path: &path}
+		path := jmespath.MustCompile("age")
+		entry := FieldMappingEntryString{Path: path}
 		data := map[string]any{"age": 30}
 
 		_, err := entry.EvaluateString(data)
@@ -462,32 +377,10 @@ func TestFieldMapping_IsZero(t *testing.T) {
 	})
 
 	t.Run("non-zero value", func(t *testing.T) {
-		path := "name"
-		fm := NewFieldMapping(&FieldMappingEntry{Path: &path})
+		path := jmespath.MustCompile("name")
+		fm := NewFieldMapping(&FieldMappingEntry{Path: path})
 		if fm.IsZero() {
 			t.Error("expected IsZero to return false for non-zero value")
-		}
-	})
-}
-
-func TestFieldMapping_Equal(t *testing.T) {
-	t.Run("equal field mappings", func(t *testing.T) {
-		path := "name"
-		fm1 := NewFieldMapping(&FieldMappingEntry{Path: &path})
-		fm2 := NewFieldMapping(&FieldMappingEntry{Path: &path})
-		if !fm1.Equal(fm2) {
-			t.Error("expected field mappings to be equal")
-		}
-	})
-
-	t.Run("different types", func(t *testing.T) {
-		path := "name"
-		fm1 := NewFieldMapping(&FieldMappingEntry{Path: &path})
-		fm2 := NewFieldMapping(&FieldMappingObject{
-			Properties: map[string]FieldMapping{},
-		})
-		if fm1.Equal(fm2) {
-			t.Error("expected field mappings to be different")
 		}
 	})
 }
