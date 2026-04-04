@@ -63,23 +63,3 @@ func NewTransformerFromConfig(
 		)
 	}
 }
-
-// EqualTemplateTransformer checks if both template transformers are equal.
-func EqualTemplateTransformer(a, b TemplateTransformer) bool {
-	if a == b {
-		return true
-	}
-
-	if a == nil || b == nil || a.Type() != b.Type() {
-		return false
-	}
-
-	switch ta := a.(type) {
-	case *jmes.JMESTemplateTransformer:
-		return goutils.DeepEqual(*ta, b, true)
-	case *gotmpl.GoTemplateTransformer:
-		return goutils.DeepEqual(*ta, b, true)
-	default:
-		return false
-	}
-}

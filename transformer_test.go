@@ -21,8 +21,6 @@ import (
 	"testing"
 
 	"github.com/hasura/goenvconf"
-	"github.com/relychan/gotransform/gotmpl"
-	"github.com/relychan/gotransform/jmes"
 	"go.yaml.in/yaml/v4"
 )
 
@@ -93,24 +91,6 @@ func TestTransformerJSON(t *testing.T) {
 			transformers = append(transformers, transformer)
 		})
 	}
-
-	t.Run("test_equal", func(t *testing.T) {
-		if !EqualTemplateTransformer(transformers[0], transformers[0]) {
-			t.Fatal("expected equal, got false")
-		}
-
-		if EqualTemplateTransformer(transformers[0], jmes.NewJMESTemplateTransformer(jmes.FieldMapping{})) {
-			t.Fatal("expected not equal, got true")
-		}
-
-		if EqualTemplateTransformer(transformers[1], gotmpl.GoTemplateTransformer{}) {
-			t.Fatal("expected not equal, got true")
-		}
-
-		if EqualTemplateTransformer(transformers[0], nil) {
-			t.Fatal("expected not equal, got true")
-		}
-	})
 }
 
 func TestTransformerYAML(t *testing.T) {
