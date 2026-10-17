@@ -18,10 +18,10 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/pb33f/go-yaml"
 	"github.com/relychan/gotransform/gotmpl"
 	"github.com/relychan/gotransform/jmes"
 	"github.com/relychan/gotransform/transformtypes"
-	"go.yaml.in/yaml/v4"
 )
 
 func TestTemplateTransformerConfig_UnmarshalJSON_GoTemplate(t *testing.T) {

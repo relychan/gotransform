@@ -19,11 +19,11 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/pb33f/go-yaml"
 	"github.com/relychan/gotransform/gotmpl"
 	"github.com/relychan/gotransform/jmes"
 	"github.com/relychan/gotransform/transformtypes"
 	"github.com/relychan/goutils"
-	"go.yaml.in/yaml/v4"
 )
 
 var errConfigTypeRequired = errors.New("transformer config type is required")

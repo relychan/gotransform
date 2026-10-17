@@ -21,7 +21,7 @@ import (
 	"testing"
 
 	"github.com/hasura/goenvconf"
-	"go.yaml.in/yaml/v4"
+	"github.com/pb33f/go-yaml"
 )
 
 func TestTransformerJSON(t *testing.T) {

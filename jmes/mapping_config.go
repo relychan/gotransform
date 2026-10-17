@@ -20,8 +20,8 @@ import (
 
 	"github.com/hasura/goenvconf"
 	"github.com/jmespath-community/go-jmespath"
+	"github.com/pb33f/go-yaml"
 	"github.com/relychan/goutils"
-	"go.yaml.in/yaml/v4"
 )
 
 // FieldMappingConfigInterface abstracts the interface of a field mapping config.
