@@ -11,6 +11,8 @@ linters:
     - ireturn
     - gomoddirectives
     - tagalign
+    - gomodguard
+    - exhaustruct_v5
   settings:
     depguard:
       rules:
